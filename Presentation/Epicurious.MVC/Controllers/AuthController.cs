@@ -19,16 +19,16 @@ namespace Epicurious.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register2()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(nameof(Index), "Home");
+                return RedirectToAction("Login", controllerName: "Auth");
             }
 
-            var registerViewModel = new AuthRegisterViewModel();
+            var registerViewModel2 = new AuthRegisterViewModel();
 
-            return View(registerViewModel);
+            return View(registerViewModel2);
         }
 
         [HttpPost]
