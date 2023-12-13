@@ -1,4 +1,7 @@
-﻿using System;
+
+
+using Epicurious.Domain.Enums;
+
 using System.ComponentModel.DataAnnotations;
 
 namespace Epicurious.MVC.ViewModels
@@ -7,6 +10,7 @@ namespace Epicurious.MVC.ViewModels
     {
         [Required]
         public string Email { get; set; }
+
 
         [Required]
         [MinLength(2, ErrorMessage = "UserName must be at least 2 characters.")]
@@ -26,4 +30,6 @@ namespace Epicurious.MVC.ViewModels
     }
 }
 
+    }
+}
 

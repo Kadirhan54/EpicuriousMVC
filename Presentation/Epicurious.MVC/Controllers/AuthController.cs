@@ -1,3 +1,4 @@
+
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -10,12 +11,14 @@ using Epicurious.MVC.ViewModels;
 using System.Net.Mail;
 
 
+
 namespace Epicurious.MVC.Controllers
 {
     public class AuthController : Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+
         private readonly IToastNotification _toastNotification;
         private readonly IResend _resend;
         private readonly IHostEnvironment _environment;
@@ -32,6 +35,7 @@ namespace Epicurious.MVC.Controllers
             _signInManager = signInManager;
             _resend = resend;
             _environment = environment;
+
         }
 
         [HttpGet]
@@ -43,6 +47,7 @@ namespace Epicurious.MVC.Controllers
             }
 
             var registerViewModel = new AuthRegisterViewModel();
+
             return View(registerViewModel);
         }
 
@@ -60,9 +65,13 @@ namespace Epicurious.MVC.Controllers
                 Email = registerViewModel.Email,
                 FirstName = registerViewModel.FirstName,
                 SurName = registerViewModel.SurName,
+
+                Gender = registerViewModel.Gender,
+                BirthDate = registerViewModel.BirthDate.Value.ToUniversalTime(),
                 UserName = registerViewModel.UserName,
                 CreatedOn = DateTimeOffset.UtcNow,
-                CreatedByUserId = userId.ToString() // Other properties (gender yok)
+                CreatedByUserId = userId.ToString()
+
             };
 
             var identityResult = await _userManager.CreateAsync(user, registerViewModel.Password);
@@ -73,6 +82,7 @@ namespace Epicurious.MVC.Controllers
                 {
                     ModelState.AddModelError(error.Code, error.Description);
                 }
+
                 return View(registerViewModel);
             }
 
@@ -143,6 +153,7 @@ namespace Epicurious.MVC.Controllers
             return View();
         }
 
+
         [HttpGet]
         public IActionResult Login()
         {
@@ -167,7 +178,9 @@ namespace Epicurious.MVC.Controllers
 
             if (user is null)
             {
+
                 _toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
+
 
                 return View(loginViewModel);
             }
@@ -178,12 +191,26 @@ namespace Epicurious.MVC.Controllers
             {
                 _toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
 
+
                 return View(loginViewModel);
             }
 
             _toastNotification.AddSuccessToastMessage($"Welcome {user.UserName}!");
 
             return RedirectToAction("Index", controllerName: "Recipe");
+        }
+
+        [HttpGet]
+        public IActionResult SignOut()
+        {
+            //if (!ModelState.IsValid)
+            //    return View(loginViewModel);
+
+            //var user = await _userManager.FindByEmailAsync(loginViewModel.Email);
+
+            _signInManager.SignOutAsync();
+
+            return RedirectToAction("Login", controllerName: "Auth");
         }
     }
 }

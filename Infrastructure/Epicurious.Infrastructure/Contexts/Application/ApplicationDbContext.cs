@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 
-namespace WebApi.Persistence.Contexts
+namespace Epicurious.Infrastructure.Contexts.Application
 {
     public class ApplicationDbContext : DbContext
     {
