@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Epicurious.Domain.Common
 {
-    internal interface IDeletedByEntity
+    public interface IDeletedByEntity
     {
+        public bool IsDeleted { get; set; }
+        public string? DeletedByUserId { get; set; }
+        public DateTimeOffset? DeletedOn { get; set; }
     }
 }
