@@ -1,7 +1,16 @@
-﻿using Epicurious.Domain.Identity;
-using Epicurious.MVC.ViewModels;
+
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using NToastNotify;
+using Resend;
+using Epicurious.Domain.Identity;
+using Epicurious.MVC.ViewModels;
+using System.Net.Mail;
+
+
 
 namespace Epicurious.MVC.Controllers
 {
@@ -9,13 +18,24 @@ namespace Epicurious.MVC.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        //private readonly IToastNotification _toastNotification;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        private readonly IToastNotification _toastNotification;
+        private readonly IResend _resend;
+        private readonly IHostEnvironment _environment;
+
+        public AuthController(
+            UserManager<User> userManager,
+            IToastNotification toastNotification,
+            SignInManager<User> signInManager,
+            IResend resend,
+            IHostEnvironment environment)
         {
             _userManager = userManager;
-            //_toastNotification = toastNotification;
+            _toastNotification = toastNotification;
             _signInManager = signInManager;
+            _resend = resend;
+            _environment = environment;
+
         }
 
         [HttpGet]
@@ -36,6 +56,7 @@ namespace Epicurious.MVC.Controllers
         {
             if (!ModelState.IsValid)
                 return View(registerViewModel);
+
             var userId = Guid.NewGuid();
 
             var user = new User()
@@ -44,11 +65,13 @@ namespace Epicurious.MVC.Controllers
                 Email = registerViewModel.Email,
                 FirstName = registerViewModel.FirstName,
                 SurName = registerViewModel.SurName,
+
                 Gender = registerViewModel.Gender,
                 BirthDate = registerViewModel.BirthDate.Value.ToUniversalTime(),
                 UserName = registerViewModel.UserName,
                 CreatedOn = DateTimeOffset.UtcNow,
                 CreatedByUserId = userId.ToString()
+
             };
 
             var identityResult = await _userManager.CreateAsync(user, registerViewModel.Password);
@@ -63,10 +86,73 @@ namespace Epicurious.MVC.Controllers
                 return View(registerViewModel);
             }
 
-            //_toastNotification.AddSuccessToastMessage("You've successfully registered to the application.");
+            _toastNotification.AddSuccessToastMessage("You've successfully registered to the application.");
+
+            // Building the button's URL
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user); // token, UserId
+
+            token = HttpUtility.UrlEncode(token);
+
+            var buttonLink = $"https://localhost:7206/Auth/VerifyEmail?email={user.Email}&token={token}";
+
+            //
+            var wwwRootPath = _environment.WebRootPath;
+
+            var fullPathToHtml = Path.Combine(wwwRootPath, "email-templates", "verify-email.html");
+
+            var htmlText = await System.IO.File.ReadAllTextAsync(fullPathToHtml);
+
+            var title = "Epicurious - Email Verification";
+
+            // Title
+            htmlText = htmlText.Replace("{{Title}}", title);
+
+            // Description
+            htmlText = htmlText.Replace("{{Description}}",
+                "Welcome to our application. Please click the \"Verify\" button below to confirm your email address.");
+
+            htmlText = htmlText.Replace("{{ButtonLink}}", buttonLink);
+
+            htmlText = htmlText.Replace("{{ButtonText}}", "Verify");
+
+            var message = new EmailMessage();
+            message.From = "a@yazilim.academy";
+            message.To.Add(user.Email);
+            message.Subject = title;
+            message.HtmlBody = htmlText;
+
+            await _resend.EmailSendAsync(message);
 
             return RedirectToAction(nameof(Login));
         }
+
+
+        [HttpGet] // localhost:7206/Auth/VerifyEmail?email=a@gmail.com&token=gkomaskdlqwenmjasksdaasdadasd
+        public async Task<IActionResult> VerifyEmailAsync(string email, string token)
+        {
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            var identityResult = await _userManager.ConfirmEmailAsync(user, token);
+
+            if (!identityResult.Succeeded)
+            {
+                foreach (var error in identityResult.Errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
+
+                _toastNotification.AddErrorToastMessage("We unfortunately couldn't verify your email.");
+
+                return View();
+            }
+
+
+            _toastNotification.AddSuccessToastMessage("You've successfully verified your email address.");
+
+            return View();
+        }
+
 
         [HttpGet]
         public IActionResult Login()
@@ -92,7 +178,9 @@ namespace Epicurious.MVC.Controllers
 
             if (user is null)
             {
-                //_toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
+
+                _toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
+
 
                 return View(loginViewModel);
             }
@@ -101,16 +189,16 @@ namespace Epicurious.MVC.Controllers
 
             if (!loginResult.Succeeded)
             {
-                //_toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
+                _toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
+
 
                 return View(loginViewModel);
             }
 
-            //_toastNotification.AddSuccessToastMessage($"Welcome {user.UserName}!");
+            _toastNotification.AddSuccessToastMessage($"Welcome {user.UserName}!");
 
             return RedirectToAction("Index", controllerName: "Recipe");
         }
-
 
         [HttpGet]
         public IActionResult SignOut()
