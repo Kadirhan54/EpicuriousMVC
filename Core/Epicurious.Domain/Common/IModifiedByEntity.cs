@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Epicurious.Domain.Common
 {
-    internal interface IModifiedByEntity
+    public interface IModifiedByEntity
     {
+        public string? ModifiedByUserId { get; set; }
+        public DateTimeOffset? LastModifiedOn { get; set; }
     }
 }

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Epicurious.Domain.Common
 {
-    internal interface IEntityBase
+    public interface IEntityBase<T> 
     {
+        public T Id { get; set; }
     }
 }

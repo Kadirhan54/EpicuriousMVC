@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Epicurious.Domain.Common
 {
-    internal interface ICreatedByEntity
+    public interface ICreatedByEntity
     {
+        public string CreatedByUserId { get; set; }
+        public DateTimeOffset CreatedOn { get; set; }
     }
 }
