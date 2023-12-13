@@ -17,4 +17,10 @@
     <ProjectReference Include="..\..\Infrastructure\Epicurious.Infrastructure\Epicurious.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.json">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
