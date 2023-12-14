@@ -29,7 +29,3 @@ namespace Epicurious.MVC.ViewModels
         public DateTimeOffset? BirthDate { get; set; }
     }
 }
-
-    }
-}
-

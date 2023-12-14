@@ -17,7 +17,7 @@
   <ItemGroup>
     <Folder Include="ViewModels\" />
     <Folder Include="Views\Auth\" />
-    <Folder Include="Views\Recipes\" />
+    <Folder Include="Views\Recipe\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NToastNotify" Version="8.0.0" />
@@ -38,11 +38,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Epicurious.Infrastructure\Epicurious.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Epicurious.Persistence\Epicurious.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Update="appsettings.json">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

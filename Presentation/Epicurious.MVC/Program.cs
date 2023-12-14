@@ -1,30 +1,34 @@
 using Epicurious.Domain.Identity;
 using Epicurious.Infrastructure.Contexts.Application;
 using Epicurious.Infrastructure.Contexts.Identity;
+using Epicurious.Persistence.UnitOfWork;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services
-    .AddControllersWithViews();
-
+//// Add services to the container.
 //builder.Services
-//    .AddControllersWithViews()
-//    .AddNToastNotifyToastr();
+//    .AddControllersWithViews();
 
-var connectionString = builder.Configuration.GetSection("YetgenPostgreSQLDB").Value;
+builder.Services
+    .AddControllersWithViews()
+    .AddNToastNotifyToastr();
+
+var connectionStringIdentity = builder.Configuration.GetSection("EpicuriousIdentitySQLDB").Value;
+var connectionStringApplication = builder.Configuration.GetSection("EpicuriousApplicationSQLDB").Value;
 
 builder.Services.AddDbContext<EpicuriousIdentityContext>(options =>
 {
-    options.UseNpgsql(connectionString);
+    options.UseNpgsql(connectionStringIdentity);
 });
 
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//{
-//    options.UseNpgsql(connectionString);
-//});
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseNpgsql(connectionStringApplication);
+});
+
+builder.Services.AddScoped<UnitOfWork>();
 
 builder.Services.AddSession();
 

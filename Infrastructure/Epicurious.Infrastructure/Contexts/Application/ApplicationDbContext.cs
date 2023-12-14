@@ -15,7 +15,9 @@ namespace Epicurious.Infrastructure.Contexts.Application
 
         }
 
-
+        public ApplicationDbContext()
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
