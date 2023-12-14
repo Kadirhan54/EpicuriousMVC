@@ -3,18 +3,26 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Epicurious.MVC.ViewModels;
 using System.Collections.Generic;
+using Epicurious.Persistence.UnitOfWork;
+using Epicurious.Domain.Entities;
 
 namespace Epicurious.MVC.Controllers
 {
     [Authorize] // Bu controller'a sadece yetkili kullanıcıların erişebilmesi için
     public class RecipeController : Controller
     {
-        private readonly List<RecipeViewModel> _recipes = new List<RecipeViewModel>();
+        private readonly UnitOfWork _unitOfWork;
+        //private readonly List<RecipeViewModel> _recipes = new List<RecipeViewModel>();
+
+        public RecipeController(UnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
         // Recipe listesini görüntüleme
         public IActionResult Index()
         {
-            return View(_recipes);
+            return View(_unitOfWork.RecipeRepository.GetAll());
         }
 
         // Recipe eklemek için get action
@@ -27,20 +35,22 @@ namespace Epicurious.MVC.Controllers
 
         // Recipe eklemek için post action
         [HttpPost]
-        public IActionResult AddRecipe(RecipeViewModel addRecipeViewModel)
+        public IActionResult AddRecipeAsync(RecipeViewModel addRecipeViewModel)
         {
             if (ModelState.IsValid)
             {
                 // Yeni bir Recipe nesnesi oluşturdum ve listeye ekledim
-                var recipe = new RecipeViewModel
+                var recipe = new Recipe
                 {
+                    RecipeId = Guid.NewGuid(),
                     Title = addRecipeViewModel.Title,
                     Ingredients = addRecipeViewModel.Ingredients,
                     Description = addRecipeViewModel.Description,
-                    // Diğer özellikler işte
+                    Comment = new Comment { }
                 };
 
-                _recipes.Add(recipe);
+                _unitOfWork.RecipeRepository.Add(recipe);
+                //_recipes.Add(recipe);
 
                 return RedirectToAction(nameof(Index));
             }

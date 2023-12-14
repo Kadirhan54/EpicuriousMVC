@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace Epicurious.Infrastructure.Contexts.Identity
 {
@@ -20,7 +21,7 @@ namespace Epicurious.Infrastructure.Contexts.Identity
 
             var optionsBuilder = new DbContextOptionsBuilder<EpicuriousIdentityContext>();
 
-            var connectionString = configuration.GetSection("YetgenPostgreSQLDB").Value;
+            var connectionString = configuration.GetSection("EpicuriousIdentitySQLDB").Value;
 
             optionsBuilder.UseNpgsql(connectionString);
 
