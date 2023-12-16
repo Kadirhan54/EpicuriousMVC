@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Epicurious.Domain.Entities
 {
-    public class Comment
+    public class Comment : EntityBase<Guid>
     {
-        public Guid CommentId { get; set; }
+        //public Guid CommentId { get; set; }
 
     }
 }

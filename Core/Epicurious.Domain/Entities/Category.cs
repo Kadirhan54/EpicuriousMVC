@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Epicurious.Domain.Entities
 {
-    public class Category
+    public class Category : EntityBase<Guid>
     {
         public Recipe recipe {  get; set; }
     }

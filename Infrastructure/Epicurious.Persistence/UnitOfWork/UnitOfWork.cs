@@ -1,26 +1,22 @@
-﻿using Epicurious.Domain.Entities;
+﻿using Epicurious.Application.Repositories;
+using Epicurious.Domain.Entities;
 using Epicurious.Infrastructure.Contexts.Application;
 using Epicurious.Persistence.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Epicurious.Persistence.UnitOfWork
 {
     public class UnitOfWork : IDisposable
     {
         private readonly ApplicationDbContext context;
-        private Repository<Recipe> recipeRepository;
-        private Repository<Comment> commentRepository;
+        private IRepository<Recipe> recipeRepository;
+        private IRepository<Comment> commentRepository;
 
         public UnitOfWork(ApplicationDbContext _context)
         {
             context = _context;
         }
 
-        public Repository<Recipe> RecipeRepository
+        public IRepository<Recipe> RecipeRepository
         {
             get
             {
@@ -33,7 +29,7 @@ namespace Epicurious.Persistence.UnitOfWork
             }
         }
 
-        public Repository<Comment> CommentRepository
+        public IRepository<Comment> CommentRepository
         {
             get
             {

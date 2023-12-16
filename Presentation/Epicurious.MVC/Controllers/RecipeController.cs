@@ -42,7 +42,7 @@ namespace Epicurious.MVC.Controllers
                 // Yeni bir Recipe nesnesi oluşturdum ve listeye ekledim
                 var recipe = new Recipe
                 {
-                    RecipeId = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     Title = addRecipeViewModel.Title,
                     Ingredients = addRecipeViewModel.Ingredients,
                     Description = addRecipeViewModel.Description,

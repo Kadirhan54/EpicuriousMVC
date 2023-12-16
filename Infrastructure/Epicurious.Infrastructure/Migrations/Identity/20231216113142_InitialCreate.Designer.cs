@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Epicurious.Infrastructure.Migrations.Identity
 {
     [DbContext(typeof(EpicuriousIdentityContext))]
-    [Migration("20231213083921_InitialCreate")]
+    [Migration("20231216113142_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
