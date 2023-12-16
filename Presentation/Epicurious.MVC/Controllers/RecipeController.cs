@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Epicurious.Domain.Entities;
+using Epicurious.MVC.ViewModels;
+using Epicurious.Persistence.UnitofWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Epicurious.MVC.ViewModels;
-using System.Collections.Generic;
-using Epicurious.Persistence.UnitOfWork;
-using Epicurious.Domain.Entities;
 
 namespace Epicurious.MVC.Controllers
 {

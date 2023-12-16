@@ -1,16 +1,9 @@
-﻿using Epicurious.Infrastructure.Contexts.Application;
+﻿using Epicurious.Domain.Identity;
+using Epicurious.Infrastructure.Contexts.Application;
 using Epicurious.Infrastructure.Contexts.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using WebApi.Persistence.Contexts;
 
 namespace Epicurious.Infrastructure
 {

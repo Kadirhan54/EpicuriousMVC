@@ -3,7 +3,7 @@ using Epicurious.Domain.Entities;
 using Epicurious.Infrastructure.Contexts.Application;
 using Epicurious.Persistence.Repositories;
 
-namespace Epicurious.Persistence.UnitOfWork
+namespace Epicurious.Persistence.UnitofWork
 {
     public class UnitOfWork : IDisposable
     {
