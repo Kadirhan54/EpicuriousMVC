@@ -3,6 +3,7 @@ using Epicurious.MVC.ViewModels;
 using Epicurious.Persistence.UnitofWork;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace Epicurious.MVC.Controllers
 {
@@ -10,11 +11,14 @@ namespace Epicurious.MVC.Controllers
     public class RecipeController : Controller
     {
         private readonly UnitOfWork _unitOfWork;
-        //private readonly List<RecipeViewModel> _recipes = new List<RecipeViewModel>();
+        private readonly List<RecipeViewModel> _recipes = new List<RecipeViewModel>();
+        private readonly IToastNotification _toastNotification;
 
-        public RecipeController(UnitOfWork unitOfWork)
+
+        public RecipeController(UnitOfWork unitOfWork, IToastNotification toastNotification)
         {
             _unitOfWork = unitOfWork;
+            _toastNotification = toastNotification;
         }
 
         // Recipe listesini görüntüleme
@@ -27,13 +31,13 @@ namespace Epicurious.MVC.Controllers
         [HttpGet]
         public IActionResult AddRecipe()
         {
-            var addRecipeViewModel = new RecipeViewModel(); // Recipe eklemek için bir ViewModel olduğunu varsayalım
+            var addRecipeViewModel = new RecipeViewModel();
             return View(addRecipeViewModel);
         }
 
         // Recipe eklemek için post action
         [HttpPost]
-        public IActionResult AddRecipeAsync(RecipeViewModel addRecipeViewModel)
+        public IActionResult AddRecipe(RecipeViewModel addRecipeViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -49,7 +53,7 @@ namespace Epicurious.MVC.Controllers
                 };
 
                 _unitOfWork.RecipeRepository.Add(recipe);
-                //_recipes.Add(recipe);
+                _toastNotification.AddSuccessToastMessage("Recipe added succeed!");
 
                 return RedirectToAction(nameof(Index));
             }

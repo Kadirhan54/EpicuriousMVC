@@ -1,6 +1,9 @@
 using Epicurious.Infrastructure;
 using Epicurious.MVC;
 using Epicurious.Persistence;
+using NToastNotify;
+using Resend;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +34,7 @@ app.UseAuthorization();
 
 app.UseSession();
 
-//app.UseNToastNotify();
+app.UseNToastNotify();
 
 app.MapControllerRoute(
     name: "default",

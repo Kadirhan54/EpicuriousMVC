@@ -1,3 +1,4 @@
+using System.Net;
 using Epicurious.Domain.Identity;
 using Epicurious.MVC.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -14,23 +15,23 @@ namespace Epicurious.MVC.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        //private readonly IToastNotification _toastNotification;
-        //private readonly IResend _resend;
-        //private readonly IHostEnvironment _environment;
+        private readonly IToastNotification _toastNotification;
+        private readonly IResend _resend;
+        private readonly IWebHostEnvironment _environment;
 
         public AuthController(
             UserManager<User> userManager,
-            //IToastNotification toastNotification,
-            SignInManager<User> signInManager
-            //IResend resend,
-            //IHostEnvironment environment
+            IToastNotification toastNotification,
+            SignInManager<User> signInManager,
+            IResend resend,
+            IWebHostEnvironment environment
             )
         {
             _userManager = userManager;
-            //_toastNotification = toastNotification;
+            _toastNotification = toastNotification;
             _signInManager = signInManager;
-            //_resend = resend;
-            //_environment = environment;
+            _resend = resend;
+            _environment = environment;
 
         }
 
@@ -61,7 +62,6 @@ namespace Epicurious.MVC.Controllers
                 Email = registerViewModel.Email,
                 FirstName = registerViewModel.FirstName,
                 SurName = registerViewModel.SurName,
-                //Gender = registerViewModel.Gender,
                 BirthDate = registerViewModel.BirthDate.Value.ToUniversalTime(),
                 UserName = registerViewModel.UserName,
                 CreatedOn = DateTimeOffset.UtcNow,
@@ -81,42 +81,43 @@ namespace Epicurious.MVC.Controllers
                 return View(registerViewModel);
             }
 
-            //_toastNotification.AddSuccessToastMessage("You've successfully registered to the application.");
+            _toastNotification.AddSuccessToastMessage("You've successfully registered to the application.");
 
             //// Building the button's URL
-            //var token = await _userManager.GenerateEmailConfirmationTokenAsync(user); // token, UserId
+            var token = WebUtility.UrlEncode(await _userManager.GenerateEmailConfirmationTokenAsync(user));
+            // token, UserId
 
-            //token = HttpUtility.UrlEncode(token);
+            token = WebUtility.UrlEncode(token);
 
-            //var buttonLink = $"https://localhost:7206/Auth/VerifyEmail?email={user.Email}&token={token}";
+            var buttonLink = $"https://localhost:7206/Auth/VerifyEmail?email={user.Email}&token={token}";
 
             ////
-            //var wwwRootPath = _environment.WebRootPath;
+            var wwwRootPath = _environment.WebRootPath;
 
-            //var fullPathToHtml = Path.Combine(wwwRootPath, "email-templates", "verify-email.html");
+            var fullPathToHtml = Path.Combine(wwwRootPath, "email-templates", "verify-email.html");
 
-            //var htmlText = await System.IO.File.ReadAllTextAsync(fullPathToHtml);
+            var htmlText = await System.IO.File.ReadAllTextAsync(fullPathToHtml);
 
-            //var title = "Epicurious - Email Verification";
+            var title = "Epicurious - Email Verification";
 
             //// Title
-            //htmlText = htmlText.Replace("{{Title}}", title);
+            htmlText = htmlText.Replace("{{Title}}", title);
 
             //// Description
-            //htmlText = htmlText.Replace("{{Description}}",
-            //    "Welcome to our application. Please click the \"Verify\" button below to confirm your email address.");
+            htmlText = htmlText.Replace("{{Description}}",
+                "Welcome to our application. Please click the \"Verify\" button below to confirm your email address.");
 
-            //htmlText = htmlText.Replace("{{ButtonLink}}", buttonLink);
+            htmlText = htmlText.Replace("{{ButtonLink}}", buttonLink);
 
-            //htmlText = htmlText.Replace("{{ButtonText}}", "Verify");
+            htmlText = htmlText.Replace("{{ButtonText}}", "Verify");
 
-            //var message = new EmailMessage();
-            //message.From = "a@yazilim.academy";
-            //message.To.Add(user.Email);
-            //message.Subject = title;
-            //message.HtmlBody = htmlText;
+            var message = new EmailMessage();
+            message.From = "a@yazilim.academy";
+            message.To.Add(user.Email);
+            message.Subject = title;
+            message.HtmlBody = htmlText;
 
-            //await _resend.EmailSendAsync(message);
+            await _resend.EmailSendAsync(message);
 
             return RedirectToAction(nameof(Login));
         }
@@ -137,13 +138,13 @@ namespace Epicurious.MVC.Controllers
                     ModelState.AddModelError(error.Code, error.Description);
                 }
 
-                //_toastNotification.AddErrorToastMessage("We unfortunately couldn't verify your email.");
+                _toastNotification.AddErrorToastMessage("We unfortunately couldn't verify your email.");
 
                 return View();
             }
 
 
-            //_toastNotification.AddSuccessToastMessage("You've successfully verified your email address.");
+            _toastNotification.AddSuccessToastMessage("You've successfully verified your email address.");
 
             return View();
         }
@@ -174,7 +175,7 @@ namespace Epicurious.MVC.Controllers
             if (user is null)
             {
 
-                //_toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
+                _toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
 
 
                 return View(loginViewModel);
@@ -184,24 +185,25 @@ namespace Epicurious.MVC.Controllers
 
             if (!loginResult.Succeeded)
             {
-                //_toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
+                _toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
 
 
                 return View(loginViewModel);
             }
 
-            //_toastNotification.AddSuccessToastMessage($"Welcome {user.UserName}!");
+            _toastNotification.AddSuccessToastMessage($"Welcome {user.UserName}!");
 
             return RedirectToAction("Index", controllerName: "Recipe");
         }
 
         [HttpGet]
-        public IActionResult SignOut()
+        public async Task<IActionResult> SignOut()
         {
-            //if (!ModelState.IsValid)
-            //    return View(loginViewModel);
+            AuthLoginViewModel loginViewModel = new AuthLoginViewModel();
+            if (!ModelState.IsValid)
+                return View(loginViewModel);
 
-            //var user = await _userManager.FindByEmailAsync(loginViewModel.Email);
+            var user = await _userManager.FindByEmailAsync(loginViewModel.Email);
 
             _signInManager.SignOutAsync();
 
