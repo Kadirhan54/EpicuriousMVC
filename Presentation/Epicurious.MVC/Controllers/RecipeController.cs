@@ -46,7 +46,8 @@ namespace Epicurious.MVC.Controllers
                     Title = addRecipeViewModel.Title,
                     Ingredients = addRecipeViewModel.Ingredients,
                     Description = addRecipeViewModel.Description,
-                    Comment = new Comment { }
+                    Comment = new Comment { CreatedByUserId = User.Identity.Name },
+                    CreatedByUserId = User.Identity.Name,
                 };
 
                 _unitOfWork.RecipeRepository.Add(recipe);
