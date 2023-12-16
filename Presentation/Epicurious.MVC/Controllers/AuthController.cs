@@ -1,4 +1,5 @@
 using Epicurious.Domain.Identity;
+using Epicurious.MVC.Validators;
 using Epicurious.MVC.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,20 +15,20 @@ namespace Epicurious.MVC.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        //private readonly IToastNotification _toastNotification;
+        private readonly IToastNotification _toastNotification;
         //private readonly IResend _resend;
         //private readonly IHostEnvironment _environment;
 
         public AuthController(
             UserManager<User> userManager,
-            //IToastNotification toastNotification,
+            IToastNotification toastNotification,
             SignInManager<User> signInManager
             //IResend resend,
             //IHostEnvironment environment
             )
         {
             _userManager = userManager;
-            //_toastNotification = toastNotification;
+            _toastNotification = toastNotification;
             _signInManager = signInManager;
             //_resend = resend;
             //_environment = environment;
@@ -51,7 +52,19 @@ namespace Epicurious.MVC.Controllers
         public async Task<IActionResult> RegisterAsync(AuthRegisterViewModel registerViewModel)
         {
             if (!ModelState.IsValid)
+            {
+                // Add validation errors to NToastNotify
+                var validator = new AuthRegisterViewModelValidator();
+                var validationResult = validator.Validate(registerViewModel);
+
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    _toastNotification.AddErrorToastMessage(error.ErrorMessage);
+                }       
+
                 return View(registerViewModel);
+            }
 
             var userId = Guid.NewGuid();
 
@@ -76,10 +89,13 @@ namespace Epicurious.MVC.Controllers
                 foreach (var error in identityResult.Errors)
                 {
                     ModelState.AddModelError(error.Code, error.Description);
+                    _toastNotification.AddErrorToastMessage(error.Description);
                 }
 
                 return View(registerViewModel);
             }
+
+            return RedirectToAction(nameof(Login));
 
             //_toastNotification.AddSuccessToastMessage("You've successfully registered to the application.");
 
@@ -118,7 +134,6 @@ namespace Epicurious.MVC.Controllers
 
             //await _resend.EmailSendAsync(message);
 
-            return RedirectToAction(nameof(Login));
         }
 
 

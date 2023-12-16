@@ -1,12 +1,11 @@
 using Epicurious.Infrastructure;
 using Epicurious.MVC;
 using Epicurious.Persistence;
+using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddControllersWithViews()
-    .AddNToastNotifyToastr();
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddInfrastructureServices();
 builder.Services.AddPersistenceServices();
@@ -31,7 +30,7 @@ app.UseAuthorization();
 
 app.UseSession();
 
-//app.UseNToastNotify();
+app.UseNToastNotify();
 
 app.MapControllerRoute(
     name: "default",
