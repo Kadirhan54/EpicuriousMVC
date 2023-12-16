@@ -10,7 +10,6 @@ namespace Epicurious.MVC.Controllers
     public class RecipeController : Controller
     {
         private readonly UnitOfWork _unitOfWork;
-        //private readonly List<RecipeViewModel> _recipes = new List<RecipeViewModel>();
 
         public RecipeController(UnitOfWork unitOfWork)
         {
@@ -21,6 +20,23 @@ namespace Epicurious.MVC.Controllers
         public IActionResult Index()
         {
             return View(_unitOfWork.RecipeRepository.GetAll());
+        }
+
+        // Recipe  görüntüleme
+        [HttpGet("/recipe/{id:Guid}")]
+        public IActionResult RecipePage(Guid id)
+        {
+            // Use the 'id' parameter to retrieve the specific recipe based on the provided GUID
+            var recipe = _unitOfWork.RecipeRepository.GetById(id);
+
+            if (recipe == null)
+            {
+                // Handle the case where the recipe with the specified ID is not found
+                return NotFound("Reposityory not found!");
+            }
+
+            // You might want to pass the retrieved recipe to the view
+            return View(recipe);
         }
 
         // Recipe eklemek için get action
@@ -49,7 +65,6 @@ namespace Epicurious.MVC.Controllers
                 };
 
                 _unitOfWork.RecipeRepository.Add(recipe);
-                //_recipes.Add(recipe);
 
                 return RedirectToAction(nameof(Index));
             }

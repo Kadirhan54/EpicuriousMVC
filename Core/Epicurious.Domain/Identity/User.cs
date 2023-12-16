@@ -1,4 +1,5 @@
 ﻿using Epicurious.Domain.Common;
+using Epicurious.Domain.Entities;
 using Epicurious.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
@@ -13,6 +14,8 @@ namespace Epicurious.Domain.Identity
         public Gender Gender { get; set; }
 
         public UserSetting UserSetting { get; set; }
+        public virtual ICollection<LikedRecipe> LikedRecipes { get; set; }
+        public virtual ICollection<Recipe> Recipes { get; set; }
 
         public string CreatedByUserId { get; set; }
         public DateTimeOffset CreatedOn { get; set; }

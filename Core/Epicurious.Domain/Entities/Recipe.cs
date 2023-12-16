@@ -17,7 +17,7 @@ namespace Epicurious.Domain.Entities
         public string Ingredients { get; set; }
 
         //public string ImageUrl { get; set; }
-
+        public virtual ICollection<LikedRecipe> LikedRecipes { get; set; }
         public Comment Comment { get; set; }
     }
 }
