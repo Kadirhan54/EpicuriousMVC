@@ -20,7 +20,8 @@
     <Folder Include="Views\Recipe\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NToastNotify" Version="8.0.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="NToastNotify" Version="7.0.0" />
     <PackageReference Include="Resend" Version="0.0.5" />
   </ItemGroup>
   <ItemGroup>

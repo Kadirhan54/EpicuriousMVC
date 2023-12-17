@@ -2,14 +2,10 @@ using Epicurious.Infrastructure;
 using Epicurious.MVC;
 using Epicurious.Persistence;
 using NToastNotify;
-using Resend;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddControllersWithViews()
-    .AddNToastNotifyToastr();
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddInfrastructureServices();
 builder.Services.AddPersistenceServices();

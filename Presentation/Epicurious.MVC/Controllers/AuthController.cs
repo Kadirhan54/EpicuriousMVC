@@ -1,6 +1,8 @@
 using System.Net;
 using Epicurious.Domain.Identity;
+using Epicurious.MVC.Validators;
 using Epicurious.MVC.ViewModels;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
@@ -16,15 +18,19 @@ namespace Epicurious.MVC.Controllers
         private readonly SignInManager<User> _signInManager;
 
         private readonly IToastNotification _toastNotification;
+
         private readonly IResend _resend;
         private readonly IWebHostEnvironment _environment;
+
 
         public AuthController(
             UserManager<User> userManager,
             IToastNotification toastNotification,
+
             SignInManager<User> signInManager,
             IResend resend,
             IWebHostEnvironment environment
+
             )
         {
             _userManager = userManager;
@@ -52,7 +58,18 @@ namespace Epicurious.MVC.Controllers
         public async Task<IActionResult> RegisterAsync(AuthRegisterViewModel registerViewModel)
         {
             if (!ModelState.IsValid)
+            {
+                var validator = new AuthRegisterViewModelValidator();
+                var validationResult = validator.Validate(registerViewModel);
+
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    _toastNotification.AddErrorToastMessage(error.ErrorMessage);
+                }
+
                 return View(registerViewModel);
+            }
 
             var userId = Guid.NewGuid();
 
@@ -76,6 +93,7 @@ namespace Epicurious.MVC.Controllers
                 foreach (var error in identityResult.Errors)
                 {
                     ModelState.AddModelError(error.Code, error.Description);
+                    _toastNotification.AddErrorToastMessage(error.Description);
                 }
 
                 return View(registerViewModel);
@@ -118,7 +136,6 @@ namespace Epicurious.MVC.Controllers
             message.HtmlBody = htmlText;
 
             await _resend.EmailSendAsync(message);
-
             return RedirectToAction(nameof(Login));
         }
 
@@ -168,7 +185,18 @@ namespace Epicurious.MVC.Controllers
         public async Task<IActionResult> LoginAsync(AuthLoginViewModel loginViewModel)
         {
             if (!ModelState.IsValid)
+            {
+                var validator = new AuthLoginViewModelValidator();
+                var validationResult = validator.Validate(loginViewModel);
+
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    _toastNotification.AddErrorToastMessage(error.ErrorMessage);
+                }
+
                 return View(loginViewModel);
+            }
 
             var user = await _userManager.FindByEmailAsync(loginViewModel.Email);
 
@@ -187,7 +215,6 @@ namespace Epicurious.MVC.Controllers
             {
                 _toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
 
-
                 return View(loginViewModel);
             }
 
@@ -197,15 +224,12 @@ namespace Epicurious.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SignOut()
+
+        public async Task<IActionResult> SignOutAsync()
         {
-            AuthLoginViewModel loginViewModel = new AuthLoginViewModel();
-            if (!ModelState.IsValid)
-                return View(loginViewModel);
+            await _signInManager.SignOutAsync();
 
-            var user = await _userManager.FindByEmailAsync(loginViewModel.Email);
-
-            _signInManager.SignOutAsync();
+            _toastNotification.AddSuccessToastMessage("Successfully signed out!");
 
             return RedirectToAction("Login", controllerName: "Auth");
         }

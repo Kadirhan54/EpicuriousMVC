@@ -1,6 +1,8 @@
 ﻿using Epicurious.Domain.Entities;
+using Epicurious.MVC.Validators;
 using Epicurious.MVC.ViewModels;
 using Epicurious.Persistence.UnitofWork;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
@@ -11,9 +13,7 @@ namespace Epicurious.MVC.Controllers
     public class RecipeController : Controller
     {
         private readonly UnitOfWork _unitOfWork;
-        private readonly List<RecipeViewModel> _recipes = new List<RecipeViewModel>();
         private readonly IToastNotification _toastNotification;
-
 
         public RecipeController(UnitOfWork unitOfWork, IToastNotification toastNotification)
         {
@@ -21,13 +21,11 @@ namespace Epicurious.MVC.Controllers
             _toastNotification = toastNotification;
         }
 
-        // Recipe listesini görüntüleme
         public IActionResult Index()
         {
             return View(_unitOfWork.RecipeRepository.GetAll());
         }
 
-        // Recipe eklemek için get action
         [HttpGet]
         public IActionResult AddRecipe()
         {
@@ -35,30 +33,41 @@ namespace Epicurious.MVC.Controllers
             return View(addRecipeViewModel);
         }
 
-        // Recipe eklemek için post action
+
         [HttpPost]
-        public IActionResult AddRecipe(RecipeViewModel addRecipeViewModel)
+        public async Task<IActionResult> AddRecipeAsync(RecipeViewModel addRecipeViewModel)
+
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // Yeni bir Recipe nesnesi oluşturdum ve listeye ekledim
-                var recipe = new Recipe
+                var validator = new RecipeViewModelValidator();
+                var validationResult = validator.Validate(addRecipeViewModel);
+
+                foreach (var error in validationResult.Errors)
                 {
-                    Id = Guid.NewGuid(),
-                    Title = addRecipeViewModel.Title,
-                    Ingredients = addRecipeViewModel.Ingredients,
-                    Description = addRecipeViewModel.Description,
-                    Comment = new Comment { CreatedByUserId = User.Identity.Name },
-                    CreatedByUserId = User.Identity.Name,
-                };
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    _toastNotification.AddErrorToastMessage(error.ErrorMessage);
+                }
 
-                _unitOfWork.RecipeRepository.Add(recipe);
-                _toastNotification.AddSuccessToastMessage("Recipe added succeed!");
-
-                return RedirectToAction(nameof(Index));
+                return View(addRecipeViewModel);
             }
 
-            return View(addRecipeViewModel);
+            var recipe = new Recipe
+            {
+                Id = Guid.NewGuid(),
+                Title = addRecipeViewModel.Title,
+                Ingredients = addRecipeViewModel.Ingredients,
+                Description = addRecipeViewModel.Description,
+                Comment = new Comment { CreatedByUserId = User.Identity.Name },
+                CreatedByUserId = User.Identity.Name,
+            };
+
+            _unitOfWork.RecipeRepository.Add(recipe);
+
+            _toastNotification.AddSuccessToastMessage("Successfully created Recipe!");
+
+            return RedirectToAction(nameof(Index));
+
         }
 
         //Update

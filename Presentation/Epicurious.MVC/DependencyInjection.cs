@@ -10,6 +10,14 @@ namespace Epicurious.MVC
         {
             services.AddSession();
 
+            //services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+            //{
+            //    ProgressBar = false,
+            //    PositionClass = ToastPositions.BottomCenter
+            //});
+            //Or simply go 
+            services.AddMvc().AddNToastNotifyToastr();
+
             services.AddIdentity<User, Role>(options =>
             {
                 // User Password Options
