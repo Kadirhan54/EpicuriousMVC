@@ -1,6 +1,7 @@
 using Epicurious.Domain.Identity;
 using Epicurious.MVC.Validators;
 using Epicurious.MVC.ViewModels;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
@@ -53,7 +54,6 @@ namespace Epicurious.MVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Add validation errors to NToastNotify
                 var validator = new AuthRegisterViewModelValidator();
                 var validationResult = validator.Validate(registerViewModel);
 
@@ -61,7 +61,7 @@ namespace Epicurious.MVC.Controllers
                 {
                     ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                     _toastNotification.AddErrorToastMessage(error.ErrorMessage);
-                }       
+                }
 
                 return View(registerViewModel);
             }
@@ -182,15 +182,24 @@ namespace Epicurious.MVC.Controllers
         public async Task<IActionResult> LoginAsync(AuthLoginViewModel loginViewModel)
         {
             if (!ModelState.IsValid)
+            {
+                var validator = new AuthLoginViewModelValidator();
+                var validationResult = validator.Validate(loginViewModel);
+
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    _toastNotification.AddErrorToastMessage(error.ErrorMessage);
+                }
+
                 return View(loginViewModel);
+            }
 
             var user = await _userManager.FindByEmailAsync(loginViewModel.Email);
 
             if (user is null)
             {
-
-                //_toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
-
+                _toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
 
                 return View(loginViewModel);
             }
@@ -199,26 +208,22 @@ namespace Epicurious.MVC.Controllers
 
             if (!loginResult.Succeeded)
             {
-                //_toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
-
+                _toastNotification.AddErrorToastMessage("Your email or password is incorrect.");
 
                 return View(loginViewModel);
             }
 
-            //_toastNotification.AddSuccessToastMessage($"Welcome {user.UserName}!");
+            _toastNotification.AddSuccessToastMessage($"Welcome {user.UserName}!");
 
             return RedirectToAction("Index", controllerName: "Recipe");
         }
 
         [HttpGet]
-        public IActionResult SignOut()
+        public async Task<IActionResult> SignOutAsync()
         {
-            //if (!ModelState.IsValid)
-            //    return View(loginViewModel);
+            await _signInManager.SignOutAsync();
 
-            //var user = await _userManager.FindByEmailAsync(loginViewModel.Email);
-
-            _signInManager.SignOutAsync();
+            _toastNotification.AddSuccessToastMessage("Successfully signed out!");
 
             return RedirectToAction("Login", controllerName: "Auth");
         }
