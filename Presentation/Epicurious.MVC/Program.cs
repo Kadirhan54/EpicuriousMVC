@@ -39,5 +39,15 @@ app.UseNToastNotify();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "UpdateRecipe",
+    pattern: "recipe/update/{id}",
+    defaults: new { controller = "Recipe", action = "UpdateRecipe" }
+);
+app.MapControllerRoute(
+    name: "DeleteRecipe",
+    pattern: "recipe/delete/{id}",
+    defaults: new { controller = "Recipe", action = "DeleteRecipe" }
+);
 
 app.Run();
