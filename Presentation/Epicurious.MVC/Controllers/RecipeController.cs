@@ -6,7 +6,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Epicurious.MVC.Controllers
 {
@@ -37,6 +36,7 @@ namespace Epicurious.MVC.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddRecipeAsync(RecipeViewModel addRecipeViewModel)
+
         {
             if (!ModelState.IsValid)
             {
@@ -69,6 +69,86 @@ namespace Epicurious.MVC.Controllers
             return RedirectToAction(nameof(Index));
 
         }
+
+        //Update
+        [HttpGet]
+        public IActionResult UpdateRecipe(Guid id)
+        {
+            var recipe = _unitOfWork.RecipeRepository.GetById(id);
+
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            var updateRecipeViewModel = new RecipeViewModel
+            {
+                Id = recipe.Id,
+                Title = recipe.Title,
+                Ingredients = recipe.Ingredients,
+                Description = recipe.Description,
+                Comment = new Comment { CreatedByUserId = User.Identity.Name },
+                CreatedByUserId = User.Identity.Name,
+            };
+
+
+            return View(updateRecipeViewModel);
+        }
+        [HttpPost]
+        public IActionResult UpdateRecipe(RecipeViewModel updateRecipeViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingRecipe = _unitOfWork.RecipeRepository.GetById(updateRecipeViewModel.Id);
+
+                if (existingRecipe == null)
+                {
+                    return NotFound();
+                }
+
+                existingRecipe.Title = updateRecipeViewModel.Title;
+                existingRecipe.Ingredients = updateRecipeViewModel.Ingredients;
+                existingRecipe.Description = updateRecipeViewModel.Description;
+
+                _unitOfWork.RecipeRepository.Update(existingRecipe);
+                _toastNotification.AddSuccessToastMessage("Recipe updated succeed!");
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(updateRecipeViewModel);
+        }
+        //Delete
+        [HttpGet]
+        public IActionResult DeleteRecipe(Guid id)
+        {
+            var recipe = _unitOfWork.RecipeRepository.GetById(id);
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            return View(recipe);
+        }
+
+        [HttpPost]
+        public IActionResult ConfirmDeleteRecipe(Guid id)
+        {
+            var recipe = _unitOfWork.RecipeRepository.GetById(id);
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            _unitOfWork.RecipeRepository.Delete(recipe);
+            _toastNotification.AddSuccessToastMessage("Recipe deleted succeed!");
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
 
