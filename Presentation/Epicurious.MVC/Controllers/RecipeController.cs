@@ -1,4 +1,5 @@
-﻿using Epicurious.Domain.Entities;
+﻿using Epicurious.Application.Dtos.Recipe;
+using Epicurious.Domain.Entities;
 using Epicurious.Domain.Identity;
 using Epicurious.MVC.Validators;
 using Epicurious.MVC.ViewModels;
@@ -39,22 +40,22 @@ namespace Epicurious.MVC.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddRecipeAsync(RecipeViewModel addRecipeViewModel)
+        public async Task<IActionResult> AddRecipeAsync(AddRecipeDto addRecipeDto)
 
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    var validator = new RecipeViewModelValidator();
-            //    var validationResult = validator.Validate(addRecipeViewModel);
+            if (!ModelState.IsValid)
+            {
+                var validator = new AddRecipeDtoValidator();
+                var validationResult = validator.Validate(addRecipeDto);
 
-            //    foreach (var error in validationResult.Errors)
-            //    {
-            //        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-            //        _toastNotification.AddErrorToastMessage(error.ErrorMessage);
-            //    }
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    _toastNotification.AddErrorToastMessage(error.ErrorMessage);
+                }
 
-            //    return View(addRecipeViewModel);
-            //}
+                return View(addRecipeDto);
+            }
 
             // Accessing the user's ID
             var userId = _userManager.GetUserId(User);
@@ -65,12 +66,11 @@ namespace Epicurious.MVC.Controllers
             var recipe = new Recipe
             {
                 Id = Guid.NewGuid(),
-                Title = addRecipeViewModel.Title,
-                Ingredients = addRecipeViewModel.Ingredients,
-                Description = addRecipeViewModel.Description,
-                //Comment = new Comment { CreatedByUserId = User.Identity.Name },
                 CreatedByUserId = Guid.Parse(userId),
-                ImageUrl = addRecipeViewModel.ImageUrl,
+                Title = addRecipeDto.Title,
+                Ingredients = addRecipeDto.Ingredients,
+                Description = addRecipeDto.Description,
+                ImageUrl = addRecipeDto.ImageUrl,
             };
 
             _unitOfWork.RecipeRepository.Add(recipe);
@@ -87,7 +87,6 @@ namespace Epicurious.MVC.Controllers
         {
             var recipe = _unitOfWork.RecipeRepository.GetById(id);
 
-
             if (recipe == null)
             {
                 return NotFound();
@@ -99,6 +98,7 @@ namespace Epicurious.MVC.Controllers
                 Title = recipe.Title,
                 Ingredients = recipe.Ingredients,
                 Description = recipe.Description,
+                ImageUrl = recipe.ImageUrl,
                 //Comment = new Comment { CreatedByUserId = User.Identity.Name },
                 CreatedByUserId = User.Identity.Name,
             };
