@@ -19,25 +19,25 @@ namespace Epicurious.MVC.Controllers
 
         private readonly IToastNotification _toastNotification;
 
-        private readonly IResend _resend;
-        private readonly IWebHostEnvironment _environment;
+        //private readonly IResend _resend;
+        //private readonly IWebHostEnvironment _environment;
 
 
         public AuthController(
             UserManager<User> userManager,
             IToastNotification toastNotification,
 
-            SignInManager<User> signInManager,
-            IResend resend,
-            IWebHostEnvironment environment
+            SignInManager<User> signInManager
+            //IResend resend,
+            //IWebHostEnvironment environment
 
             )
         {
             _userManager = userManager;
             _toastNotification = toastNotification;
             _signInManager = signInManager;
-            _resend = resend;
-            _environment = environment;
+            //_resend = resend;
+            //_environment = environment;
 
         }
 
@@ -82,7 +82,7 @@ namespace Epicurious.MVC.Controllers
                 BirthDate = registerViewModel.BirthDate.Value.ToUniversalTime(),
                 UserName = registerViewModel.UserName,
                 CreatedOn = DateTimeOffset.UtcNow,
-                CreatedByUserId = userId.ToString()
+                CreatedByUserId = userId
 
             };
 
@@ -101,41 +101,41 @@ namespace Epicurious.MVC.Controllers
 
             _toastNotification.AddSuccessToastMessage("You've successfully registered to the application.");
 
-            //// Building the button's URL
-            var token = WebUtility.UrlEncode(await _userManager.GenerateEmailConfirmationTokenAsync(user));
-            // token, UserId
+            ////// Building the button's URL
+            //var token = WebUtility.UrlEncode(await _userManager.GenerateEmailConfirmationTokenAsync(user));
+            //// token, UserId
 
-            token = WebUtility.UrlEncode(token);
+            //token = WebUtility.UrlEncode(token);
 
-            var buttonLink = $"https://localhost:7206/Auth/VerifyEmail?email={user.Email}&token={token}";
+            //var buttonLink = $"https://localhost:7206/Auth/VerifyEmail?email={user.Email}&token={token}";
 
-            ////
-            var wwwRootPath = _environment.WebRootPath;
+            //////
+            //var wwwRootPath = _environment.WebRootPath;
 
-            var fullPathToHtml = Path.Combine(wwwRootPath, "email-templates", "verify-email.html");
+            //var fullPathToHtml = Path.Combine(wwwRootPath, "email-templates", "verify-email.html");
 
-            var htmlText = await System.IO.File.ReadAllTextAsync(fullPathToHtml);
+            //var htmlText = await System.IO.File.ReadAllTextAsync(fullPathToHtml);
 
-            var title = "Epicurious - Email Verification";
+            //var title = "Epicurious - Email Verification";
 
-            //// Title
-            htmlText = htmlText.Replace("{{Title}}", title);
+            ////// Title
+            //htmlText = htmlText.Replace("{{Title}}", title);
 
-            //// Description
-            htmlText = htmlText.Replace("{{Description}}",
-                "Welcome to our application. Please click the \"Verify\" button below to confirm your email address.");
+            ////// Description
+            //htmlText = htmlText.Replace("{{Description}}",
+            //    "Welcome to our application. Please click the \"Verify\" button below to confirm your email address.");
 
-            htmlText = htmlText.Replace("{{ButtonLink}}", buttonLink);
+            //htmlText = htmlText.Replace("{{ButtonLink}}", buttonLink);
 
-            htmlText = htmlText.Replace("{{ButtonText}}", "Verify");
+            //htmlText = htmlText.Replace("{{ButtonText}}", "Verify");
 
-            var message = new EmailMessage();
-            message.From = "a@yazilim.academy";
-            message.To.Add(user.Email);
-            message.Subject = title;
-            message.HtmlBody = htmlText;
+            //var message = new EmailMessage();
+            //message.From = "a@yazilim.academy";
+            //message.To.Add(user.Email);
+            //message.Subject = title;
+            //message.HtmlBody = htmlText;
 
-            await _resend.EmailSendAsync(message);
+            //await _resend.EmailSendAsync(message);
             return RedirectToAction(nameof(Login));
         }
 

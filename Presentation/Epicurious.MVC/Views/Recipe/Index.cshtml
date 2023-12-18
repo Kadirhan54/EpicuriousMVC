@@ -11,6 +11,7 @@
                 <th>Description</th>
                 <th>Created By</th>
                 <th>Created On</th>
+                <th>Image</th>
 
                 <th width="20px">Update</th>
                 <th width="20px">Delete</th>
@@ -25,6 +26,9 @@
                     <td>@recipe.Description</td>
                     <td>@recipe.CreatedByUserId</td>
                     <td>@recipe.CreatedOn</td>
+                    <td>
+                        <img src="@recipe.ImageUrl" alt="Description of the image">
+                    </td>
                   
                     <!-- Add more columns as needed -->
                     <td><a href="/recipe/update/@recipe.Id" class="btn btn-success">Update</a></td>

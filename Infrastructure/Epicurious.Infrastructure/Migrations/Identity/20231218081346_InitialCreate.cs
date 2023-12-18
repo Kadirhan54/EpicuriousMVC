@@ -35,7 +35,7 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                     SurName = table.Column<string>(type: "text", nullable: false),
                     BirthDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     Gender = table.Column<int>(type: "integer", nullable: false),
-                    CreatedByUserId = table.Column<string>(type: "text", nullable: false),
+                    CreatedByUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ModifiedByUserId = table.Column<string>(type: "text", nullable: true),
                     LastModifiedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
@@ -166,6 +166,34 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                 });
 
             migrationBuilder.CreateTable(
+                name: "Recipe",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    Ingredients = table.Column<string>(type: "text", nullable: false),
+                    ImageUrl = table.Column<string>(type: "text", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreatedByUserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedByUserId = table.Column<string>(type: "text", nullable: true),
+                    LastModifiedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    DeletedByUserId = table.Column<string>(type: "text", nullable: true),
+                    DeletedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Recipe", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Recipe_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserSetting",
                 columns: table => new
                 {
@@ -173,7 +201,7 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     TimeZone = table.Column<short>(type: "smallint", nullable: false),
                     LanguageCode = table.Column<string>(type: "text", nullable: false),
-                    CreatedByUserId = table.Column<string>(type: "text", nullable: false),
+                    CreatedByUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ModifiedByUserId = table.Column<string>(type: "text", nullable: true),
                     LastModifiedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
@@ -230,6 +258,11 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Recipe_UserId",
+                table: "Recipe",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserSetting_UserId",
                 table: "UserSetting",
                 column: "UserId",
@@ -253,6 +286,9 @@ namespace Epicurious.Infrastructure.Migrations.Identity
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Recipe");
 
             migrationBuilder.DropTable(
                 name: "UserSetting");

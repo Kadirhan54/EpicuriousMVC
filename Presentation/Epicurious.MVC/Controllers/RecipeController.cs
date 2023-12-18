@@ -1,9 +1,11 @@
 ﻿using Epicurious.Domain.Entities;
+using Epicurious.Domain.Identity;
 using Epicurious.MVC.Validators;
 using Epicurious.MVC.ViewModels;
 using Epicurious.Persistence.UnitofWork;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 
@@ -14,11 +16,13 @@ namespace Epicurious.MVC.Controllers
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IToastNotification _toastNotification;
+        private readonly UserManager<User> _userManager;
 
-        public RecipeController(UnitOfWork unitOfWork, IToastNotification toastNotification)
+        public RecipeController(UnitOfWork unitOfWork, IToastNotification toastNotification, UserManager<User> userManager)
         {
             _unitOfWork = unitOfWork;
             _toastNotification = toastNotification;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -38,19 +42,25 @@ namespace Epicurious.MVC.Controllers
         public async Task<IActionResult> AddRecipeAsync(RecipeViewModel addRecipeViewModel)
 
         {
-            if (!ModelState.IsValid)
-            {
-                var validator = new RecipeViewModelValidator();
-                var validationResult = validator.Validate(addRecipeViewModel);
+            //if (!ModelState.IsValid)
+            //{
+            //    var validator = new RecipeViewModelValidator();
+            //    var validationResult = validator.Validate(addRecipeViewModel);
 
-                foreach (var error in validationResult.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                    _toastNotification.AddErrorToastMessage(error.ErrorMessage);
-                }
+            //    foreach (var error in validationResult.Errors)
+            //    {
+            //        ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            //        _toastNotification.AddErrorToastMessage(error.ErrorMessage);
+            //    }
 
-                return View(addRecipeViewModel);
-            }
+            //    return View(addRecipeViewModel);
+            //}
+
+            // Accessing the user's ID
+            var userId = _userManager.GetUserId(User);
+
+            //// Getting the entire user object
+            //var user = await _userManager.GetUserAsync(User);
 
             var recipe = new Recipe
             {
@@ -58,8 +68,9 @@ namespace Epicurious.MVC.Controllers
                 Title = addRecipeViewModel.Title,
                 Ingredients = addRecipeViewModel.Ingredients,
                 Description = addRecipeViewModel.Description,
-                Comment = new Comment { CreatedByUserId = User.Identity.Name },
-                CreatedByUserId = User.Identity.Name,
+                //Comment = new Comment { CreatedByUserId = User.Identity.Name },
+                CreatedByUserId = Guid.Parse(userId),
+                ImageUrl = addRecipeViewModel.ImageUrl,
             };
 
             _unitOfWork.RecipeRepository.Add(recipe);
@@ -84,11 +95,11 @@ namespace Epicurious.MVC.Controllers
 
             var updateRecipeViewModel = new RecipeViewModel
             {
-                Id = recipe.Id,
+                //Id = recipe.Id,
                 Title = recipe.Title,
                 Ingredients = recipe.Ingredients,
                 Description = recipe.Description,
-                Comment = new Comment { CreatedByUserId = User.Identity.Name },
+                //Comment = new Comment { CreatedByUserId = User.Identity.Name },
                 CreatedByUserId = User.Identity.Name,
             };
 
@@ -100,19 +111,19 @@ namespace Epicurious.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingRecipe = _unitOfWork.RecipeRepository.GetById(updateRecipeViewModel.Id);
+                //var existingRecipe = _unitOfWork.RecipeRepository.GetById(updateRecipeViewModel.Id);
 
-                if (existingRecipe == null)
-                {
-                    return NotFound();
-                }
+                //if (existingRecipe == null)
+                //{
+                //    return NotFound();
+                //}
 
-                existingRecipe.Title = updateRecipeViewModel.Title;
-                existingRecipe.Ingredients = updateRecipeViewModel.Ingredients;
-                existingRecipe.Description = updateRecipeViewModel.Description;
+                //existingRecipe.Title = updateRecipeViewModel.Title;
+                //existingRecipe.Ingredients = updateRecipeViewModel.Ingredients;
+                //existingRecipe.Description = updateRecipeViewModel.Description;
 
-                _unitOfWork.RecipeRepository.Update(existingRecipe);
-                _toastNotification.AddSuccessToastMessage("Recipe updated succeed!");
+                //_unitOfWork.RecipeRepository.Update(existingRecipe);
+                //_toastNotification.AddSuccessToastMessage("Recipe updated succeed!");
 
                 return RedirectToAction(nameof(Index));
             }
