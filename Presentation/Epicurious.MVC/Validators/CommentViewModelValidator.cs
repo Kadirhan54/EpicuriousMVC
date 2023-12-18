@@ -1,5 +1,5 @@
 ﻿using Epicurious.MVC.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+using FluentValidation;
 
 namespace Epicurious.MVC.Validators
 {

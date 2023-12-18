@@ -89,46 +89,44 @@ namespace Epicurious.MVC.Controllers
 
             if (recipe == null)
             {
-                return NotFound();
+                return NotFound("ASHJDGASHJDS");
             }
 
-            var updateRecipeViewModel = new RecipeViewModel
+            var updateRecipeViewModel = new UpdateRecipeDto
             {
-                //Id = recipe.Id,
                 Title = recipe.Title,
                 Ingredients = recipe.Ingredients,
                 Description = recipe.Description,
                 ImageUrl = recipe.ImageUrl,
-                //Comment = new Comment { CreatedByUserId = User.Identity.Name },
-                CreatedByUserId = User.Identity.Name,
             };
 
 
             return View(updateRecipeViewModel);
         }
         [HttpPost]
-        public IActionResult UpdateRecipe(RecipeViewModel updateRecipeViewModel)
+        public async Task<IActionResult> UpdateRecipeAsync(Guid id,UpdateRecipeDto updateRecipeDto)
         {
             if (ModelState.IsValid)
             {
-                //var existingRecipe = _unitOfWork.RecipeRepository.GetById(updateRecipeViewModel.Id);
+                var existingRecipe = _unitOfWork.RecipeRepository.GetById(id);
 
-                //if (existingRecipe == null)
-                //{
-                //    return NotFound();
-                //}
+                if (existingRecipe == null)
+                {
+                    return NotFound("QWHJKEKJQW");
+                }
 
-                //existingRecipe.Title = updateRecipeViewModel.Title;
-                //existingRecipe.Ingredients = updateRecipeViewModel.Ingredients;
-                //existingRecipe.Description = updateRecipeViewModel.Description;
+                existingRecipe.Title = updateRecipeDto.Title;
+                existingRecipe.Ingredients = updateRecipeDto.Ingredients;
+                existingRecipe.Description = updateRecipeDto.Description;
+                existingRecipe.ImageUrl = updateRecipeDto.ImageUrl;
 
-                //_unitOfWork.RecipeRepository.Update(existingRecipe);
-                //_toastNotification.AddSuccessToastMessage("Recipe updated succeed!");
+                _unitOfWork.RecipeRepository.Update(existingRecipe);
+                _toastNotification.AddSuccessToastMessage("Recipe updated succeed!");
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(updateRecipeViewModel);
+            return View(updateRecipeDto);
         }
         //Delete
         [HttpGet]

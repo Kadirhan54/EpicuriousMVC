@@ -29,10 +29,21 @@
                     <td>
                         <img src="@recipe.ImageUrl" alt="Description of the image">
                     </td>
-                  
-                    <!-- Add more columns as needed -->
-                    <td><a href="/recipe/update/@recipe.Id" class="btn btn-success">Update</a></td>
-                    <td><a href="/recipe/delete/@recipe.Id" class="btn btn-danger">Delete</a></td>
+
+                    <td><a href="/recipe/UpdateRecipe/@recipe.Id" class="btn btn-success">Update</a></td>
+                    <td><a href="/recipe/DeleteRecipe/@recipe.Id" class="btn btn-danger">Delete</a></td>
+
+@*                     <td>
+                        <form method="get" action="@Url.Action("UpdateRecipe", "Recipe")/@recipe.Id">
+                            <button type="submit">Update Recipe</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="get" action="@Url.Action("DeleteRecipe", "Recipe")/@recipe.Id">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td> *@
+
                 </tr>
             }
         </tbody>
