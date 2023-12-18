@@ -22,6 +22,8 @@ namespace Epicurious.Domain.Entities
         public User User { get; set; }
         public Guid UserId { get; set; }
 
+        public ICollection<LikedRecipe> Likes { get; set; }
+
         //public Comment Comment { get; set; }
     }
 }

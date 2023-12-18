@@ -14,7 +14,9 @@ namespace Epicurious.Domain.Identity
         public Gender Gender { get; set; }
 
         public UserSetting UserSetting { get; set; }
-        public ICollection<Recipe> Recipes {  get; set; }  
+
+        public ICollection<Recipe> Recipes {  get; set; }
+        public ICollection<LikedRecipe> LikedRecipes { get; set; }
 
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedOn { get; set; }

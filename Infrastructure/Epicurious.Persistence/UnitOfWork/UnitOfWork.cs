@@ -11,6 +11,7 @@ namespace Epicurious.Persistence.UnitofWork
         private readonly EpicuriousIdentityContext context;
         private IRepository<Recipe> recipeRepository;
         private IRepository<Comment> commentRepository;
+        private IRepository<LikedRecipe> likedRecipeRepository;
 
         public UnitOfWork(EpicuriousIdentityContext _context)
         {
@@ -40,6 +41,18 @@ namespace Epicurious.Persistence.UnitofWork
                     commentRepository = new Repository<Comment>(context);
                 }
                 return commentRepository;
+            }
+        }
+
+        public IRepository<LikedRecipe> LikedRecipeRepository
+        {
+            get
+            {
+                if (likedRecipeRepository == null)
+                {
+                    likedRecipeRepository = new Repository<LikedRecipe>(context);
+                }
+                return likedRecipeRepository;
             }
         }
 

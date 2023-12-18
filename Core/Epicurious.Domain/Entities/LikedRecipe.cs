@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Epicurious.Domain.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,14 +7,15 @@ using System.Threading.Tasks;
 
 namespace Epicurious.Domain.Entities
 {
-    public class SavedRecipes : EntityBase<Guid>
+    public class LikedRecipe : EntityBase<Guid>
     {
-        //public Guid SavedRecipeId { get; set; }
-
         // Foreign key to Recipe
         public Guid RecipeId { get; set; }
         public Recipe Recipe { get; set; }
 
-        // Other properties for a saved recipe
+        // Foreign key to User
+        public Guid UserId { get; set; }
+        public User User { get; set; }
+
     }
 }

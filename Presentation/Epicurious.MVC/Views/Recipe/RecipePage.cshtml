@@ -1,0 +1,36 @@
+﻿@model Epicurious.Domain.Entities.Recipe
+
+<h1>Recipe Page</h1>
+
+<!-- Display recipe details -->
+
+<h2>@Model.Title</h2>
+<h2>@Model.CreatedByUserId</h2>
+
+<!-- Add other recipe details as needed -->
+@* @if (Model.Likes.Any())
+{
+    <p>Starred by:</p>
+    <ul>
+        @foreach (var star in Model.Likes)
+        {
+            <li>@star.User.UserName</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No stars yet.</p>
+} *@
+
+<!-- Add a button or link to star/unstar the recipe -->
+@* Assuming you have a controller action to handle the star/unstar functionality *@
+<form method="post" action="@Url.Action("StarRecipe", "Like")">
+    <input type="hidden" name="recipeId" value="@Model.Id" />
+    <button type="submit">Star Recipe</button>
+</form>
+
+<form method="post" action="@Url.Action("UnstarRecipe", "Like")">
+    <input type="hidden" name="recipeId" value="@Model.Id" />
+    <button type="submit">Unstar Recipe</button>
+</form>

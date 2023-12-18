@@ -31,6 +31,23 @@ namespace Epicurious.MVC.Controllers
             return View(_unitOfWork.RecipeRepository.GetAll());
         }
 
+        // Recipe  görüntüleme
+        [HttpGet]
+        public IActionResult RecipePage(Guid id)
+        {
+            // Use the 'id' parameter to retrieve the specific recipe based on the provided GUID
+            var recipe = _unitOfWork.RecipeRepository.GetById(id);
+
+            if (recipe == null)
+            {
+                // Handle the case where the recipe with the specified ID is not found
+                return NotFound("Reposityory not found!ASDASDA");
+            }
+
+            // You might want to pass the retrieved recipe to the view
+            return View(recipe);
+        }
+
         [HttpGet]
         public IActionResult AddRecipe()
         {
@@ -83,7 +100,6 @@ namespace Epicurious.MVC.Controllers
 
         }
 
-        //Update
         [HttpGet]
         public IActionResult UpdateRecipe(Guid id)
         {
