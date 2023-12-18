@@ -1,4 +1,5 @@
 ﻿using Epicurious.Domain.Common;
+using Epicurious.Domain.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,11 @@ namespace Epicurious.Domain.Entities
         public string Description { get; set; }
         public string Ingredients { get; set; }
 
-        //public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; }
 
-        public Comment Comment { get; set; }
+        //public User User { get; set; }
+        //public Guid UserId { get; set; }
+
+        //public Comment Comment { get; set; }
     }
 }

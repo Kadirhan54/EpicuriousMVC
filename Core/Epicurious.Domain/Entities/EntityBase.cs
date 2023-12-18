@@ -11,7 +11,7 @@ namespace Epicurious.Domain.Entities
     {
         public virtual TKey Id { get; set; }
 
-        public virtual string CreatedByUserId { get; set; }
+        public virtual Guid CreatedByUserId { get; set; }
         public virtual DateTimeOffset CreatedOn { get; set; }
         public virtual string? ModifiedByUserId { get; set; }
         public virtual DateTimeOffset? LastModifiedOn { get; set; }
