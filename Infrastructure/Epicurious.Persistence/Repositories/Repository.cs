@@ -1,12 +1,13 @@
 ﻿using Epicurious.Application.Repositories;
 using Epicurious.Infrastructure.Contexts.Application;
+using Epicurious.Infrastructure.Contexts.Identity;
 namespace Epicurious.Persistence.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly ApplicationDbContext _context;
+        private readonly EpicuriousIdentityContext _context;
 
-        public Repository(ApplicationDbContext context)
+        public Repository(EpicuriousIdentityContext context)
         {
             _context = context;
         }

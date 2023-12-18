@@ -26,10 +26,10 @@ namespace Epicurious.Infrastructure
                 options.UseNpgsql(connectionStringIdentity);
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.UseNpgsql(connectionStringApplication);
-            });
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //{
+            //    options.UseNpgsql(connectionStringApplication);
+            //});
 
             //services.AddDbContextFactory<EpicuriousIdentityContext>();
             //services.AddDbContextFactory<ApplicationDbContextFactory>();

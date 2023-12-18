@@ -1,17 +1,18 @@
 ﻿using Epicurious.Application.Repositories;
 using Epicurious.Domain.Entities;
 using Epicurious.Infrastructure.Contexts.Application;
+using Epicurious.Infrastructure.Contexts.Identity;
 using Epicurious.Persistence.Repositories;
 
 namespace Epicurious.Persistence.UnitofWork
 {
     public class UnitOfWork : IDisposable
     {
-        private readonly ApplicationDbContext context;
+        private readonly EpicuriousIdentityContext context;
         private IRepository<Recipe> recipeRepository;
         private IRepository<Comment> commentRepository;
 
-        public UnitOfWork(ApplicationDbContext _context)
+        public UnitOfWork(EpicuriousIdentityContext _context)
         {
             context = _context;
         }

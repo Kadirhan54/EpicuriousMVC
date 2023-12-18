@@ -65,14 +65,14 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Recipe");
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("Epicurious.Domain.Identity.Role", b =>
@@ -343,9 +343,13 @@ namespace Epicurious.Infrastructure.Migrations.Identity
 
             modelBuilder.Entity("Epicurious.Domain.Entities.Recipe", b =>
                 {
-                    b.HasOne("Epicurious.Domain.Identity.User", null)
+                    b.HasOne("Epicurious.Domain.Identity.User", "User")
                         .WithMany("Recipes")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Epicurious.Domain.Identity.UserSetting", b =>

@@ -58,19 +58,21 @@ namespace Epicurious.MVC.Controllers
             }
 
             // Accessing the user's ID
-            var userId = _userManager.GetUserId(User);
+            //var userId = _userManager.GetUserId(User);
 
             //// Getting the entire user object
-            //var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
 
             var recipe = new Recipe
             {
                 Id = Guid.NewGuid(),
-                CreatedByUserId = Guid.Parse(userId),
+                CreatedByUserId = user.Id,
                 Title = addRecipeDto.Title,
                 Ingredients = addRecipeDto.Ingredients,
                 Description = addRecipeDto.Description,
                 ImageUrl = addRecipeDto.ImageUrl,
+                User = user,
+                UserId = user.Id,
             };
 
             _unitOfWork.RecipeRepository.Add(recipe);

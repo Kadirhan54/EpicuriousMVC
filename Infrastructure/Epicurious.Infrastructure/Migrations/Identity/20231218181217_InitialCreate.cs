@@ -166,7 +166,7 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                 });
 
             migrationBuilder.CreateTable(
-                name: "Recipe",
+                name: "Recipes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -174,7 +174,7 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                     Description = table.Column<string>(type: "text", nullable: false),
                     Ingredients = table.Column<string>(type: "text", nullable: false),
                     ImageUrl = table.Column<string>(type: "text", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedByUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ModifiedByUserId = table.Column<string>(type: "text", nullable: true),
@@ -185,12 +185,13 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Recipe", x => x.Id);
+                    table.PrimaryKey("PK_Recipes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Recipe_AspNetUsers_UserId",
+                        name: "FK_Recipes_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -258,8 +259,8 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recipe_UserId",
-                table: "Recipe",
+                name: "IX_Recipes_UserId",
+                table: "Recipes",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -288,7 +289,7 @@ namespace Epicurious.Infrastructure.Migrations.Identity
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Recipe");
+                name: "Recipes");
 
             migrationBuilder.DropTable(
                 name: "UserSetting");
