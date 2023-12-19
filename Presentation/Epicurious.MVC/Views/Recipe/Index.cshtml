@@ -16,12 +16,13 @@
                 <th>Title</th>
                 <th>Ingredients</th>
                 <th>Description</th>
+                <th>Like Count</th>
                 <th>Created By</th>
                 <th>Created On</th>
                 <th>Image</th>
-
                 <th width="20px">Update</th>
                 <th width="20px">Delete</th>
+                <th width="20px">Link</th>
             </tr>
         </thead>
         <tbody>
@@ -31,7 +32,8 @@
                     <td>@recipe.Title</td>
                     <td>@recipe.Ingredients</td>
                     <td>@recipe.Description</td>
-                    <td>@recipe.CreatedByUserId</td>
+                    <td>@recipe.Likes.Count</td>
+                    <td>@recipe.User.UserName</td>
                     <td>@recipe.CreatedOn</td>
                     <!-- index.cshtml dosyanızdaki ilgili bölüm -->
                     <td>
@@ -43,17 +45,18 @@
 
                     <td><a href="/recipe/UpdateRecipe/@recipe.Id" class="btn btn-success">Update</a></td>
                     <td><a href="/recipe/DeleteRecipe/@recipe.Id" class="btn btn-danger">Delete</a></td>
+                    <td><a href="/recipe/RecipePage/@recipe.Id" class="btn btn-primary">Go to Page</a></td>
 
                     @*                     <td>
-                            <form method="get" action="@Url.Action("UpdateRecipe", "Recipe")/@recipe.Id">
-                                <button type="submit">Update Recipe</button>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="get" action="@Url.Action("DeleteRecipe", "Recipe")/@recipe.Id">
-                                <button type="submit">Delete</button>
-                            </form>
-                        </td> *@
+                <form method="get" action="@Url.Action("UpdateRecipe", "Recipe")/@recipe.Id">
+                <button type="submit">Update Recipe</button>
+                </form>
+                </td>
+                <td>
+                <form method="get" action="@Url.Action("DeleteRecipe", "Recipe")/@recipe.Id">
+                <button type="submit">Delete</button>
+                </form>
+                </td> *@
 
                 </tr>
             }

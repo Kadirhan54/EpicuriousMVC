@@ -1,27 +1,35 @@
 ﻿@model Epicurious.Domain.Entities.Recipe
 
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/css/image.css" />
+}
+
 <h1>Recipe Page</h1>
 
 <!-- Display recipe details -->
 
 <h2>@Model.Title</h2>
-<h2>@Model.CreatedByUserId</h2>
+<h2>@Model.Id</h2>
+
+<div>
+    <img width="250px" src="@Model.ImageUrl" alt="Description of the image">
+</div>
 
 <!-- Add other recipe details as needed -->
-@* @if (Model.Likes.Any())
+@if (Model.Likes.Any())
 {
     <p>Starred by:</p>
     <ul>
         @foreach (var star in Model.Likes)
         {
-            <li>@star.User.UserName</li>
+            <li>@star.UserId</li>
         }
     </ul>
 }
 else
 {
     <p>No stars yet.</p>
-} *@
+}
 
 <!-- Add a button or link to star/unstar the recipe -->
 @* Assuming you have a controller action to handle the star/unstar functionality *@

@@ -28,23 +28,20 @@ namespace Epicurious.MVC.Controllers
 
         public IActionResult Index()
         {
-            return View(_unitOfWork.RecipeRepository.GetAll());
+            return View(_unitOfWork.RecipeRepository.Include(x=>x.Likes,x=>x.User));
         }
 
         // Recipe  görüntüleme
         [HttpGet]
         public IActionResult RecipePage(Guid id)
         {
-            // Use the 'id' parameter to retrieve the specific recipe based on the provided GUID
-            var recipe = _unitOfWork.RecipeRepository.GetById(id);
+            var recipe = _unitOfWork.RecipeRepository.GetById(id,x=>x.Likes);
 
             if (recipe == null)
             {
-                // Handle the case where the recipe with the specified ID is not found
                 return NotFound("Reposityory not found!ASDASDA");
             }
 
-            // You might want to pass the retrieved recipe to the view
             return View(recipe);
         }
 
