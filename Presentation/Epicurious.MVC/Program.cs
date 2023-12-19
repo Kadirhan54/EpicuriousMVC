@@ -41,10 +41,10 @@ app.MapControllerRoute(
 //    pattern: "recipe/update/{id}"
 //    //defaults: new { controller = "Recipe", action = "UpdateRecipe" }
 //);
-//app.MapControllerRoute(
-//    name: "DeleteRecipe",
-//    pattern: "recipe/delete/{id}"
-//    //defaults: new { controller = "Recipe", action = "DeleteRecipe" }
-//);
+
+app.MapControllerRoute(
+    name: "auth",
+    pattern: "{controller=Auth}/{action=Recipes}/{id?}");
+
 
 app.Run();

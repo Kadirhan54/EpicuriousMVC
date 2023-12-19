@@ -1,5 +1,12 @@
 ﻿@using Epicurious.Domain.Entities
 @model IEnumerable<Recipe>
+@{
+    ViewData["Title"] = "Recipes";
+}
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/css/image.css" />
+}
 
 <div class="container mt-3">
     <h2>Recipes</h2>
@@ -26,23 +33,27 @@
                     <td>@recipe.Description</td>
                     <td>@recipe.CreatedByUserId</td>
                     <td>@recipe.CreatedOn</td>
+                    <!-- index.cshtml dosyanızdaki ilgili bölüm -->
                     <td>
-                        <img src="@recipe.ImageUrl" alt="Description of the image">
+                        <div class="custom-image recipe">
+                            <img src="@recipe.ImageUrl" alt="Description of the image">
+                        </div>
                     </td>
+
 
                     <td><a href="/recipe/UpdateRecipe/@recipe.Id" class="btn btn-success">Update</a></td>
                     <td><a href="/recipe/DeleteRecipe/@recipe.Id" class="btn btn-danger">Delete</a></td>
 
-@*                     <td>
-                        <form method="get" action="@Url.Action("UpdateRecipe", "Recipe")/@recipe.Id">
-                            <button type="submit">Update Recipe</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form method="get" action="@Url.Action("DeleteRecipe", "Recipe")/@recipe.Id">
-                            <button type="submit">Delete</button>
-                        </form>
-                    </td> *@
+                    @*                     <td>
+                            <form method="get" action="@Url.Action("UpdateRecipe", "Recipe")/@recipe.Id">
+                                <button type="submit">Update Recipe</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="get" action="@Url.Action("DeleteRecipe", "Recipe")/@recipe.Id">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td> *@
 
                 </tr>
             }

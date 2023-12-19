@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Epicurious.MVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/img.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
     <header>
@@ -37,16 +42,20 @@
                         </li>
                         @if (signInManager.IsSignedIn(User))
                         {
-                            <li>
+                            <li class="nav-item"> 
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="SignOut">Sign Out</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Recipe" asp-action="index">Recipes</a>
+                            </li>
+
                         }
                         else
                         {
-                            <li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Log In</a>
                             </li>
-                            <li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Register">Register</a>
                             </li>
                         }
