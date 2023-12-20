@@ -9,7 +9,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddInfrastructureServices();
 builder.Services.AddPersistenceServices();
-builder.Services.AddWebServices();
+await builder.Services.AddWebServicesAsync();
 
 var app = builder.Build();
 

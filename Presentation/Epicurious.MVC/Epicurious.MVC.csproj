@@ -15,6 +15,7 @@
     <None Remove="Views\Recipes\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Services\" />
     <Folder Include="Views\Auth\" />
   </ItemGroup>
   <ItemGroup>

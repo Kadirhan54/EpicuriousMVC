@@ -10,10 +10,7 @@ namespace Epicurious.Domain.Entities
 {
     public class Recipe : EntityBase<Guid>
     {
-        //public Guid RecipeId {  get; set; }
-
         public string Title { get; set; }
-
         public string Description { get; set; }
         public string Ingredients { get; set; }
 
@@ -21,6 +18,8 @@ namespace Epicurious.Domain.Entities
 
         public User User { get; set; }
         public Guid UserId { get; set; }
+
+        //public bool? IsApproved { get; set; }
 
         public ICollection<LikedRecipe> Likes { get; set; }
 

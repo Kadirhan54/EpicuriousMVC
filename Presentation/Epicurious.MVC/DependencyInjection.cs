@@ -1,12 +1,14 @@
 ﻿using Epicurious.Domain.Identity;
 using Epicurious.Infrastructure.Contexts.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Epicurious.MVC
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddWebServices(this IServiceCollection services)
+        public static async Task<IServiceCollection> AddWebServicesAsync(this IServiceCollection services)
         {
             services.AddSession();
 
@@ -56,7 +58,30 @@ namespace Epicurious.MVC
                 options.AccessDeniedPath = new PathString("/Auth/AccessDenied");
             });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                     policy => policy.RequireRole("Admin"));
+            });
+
+            // Create roles during application startup
+            using (var serviceProvider = services.BuildServiceProvider())
+            {
+                var roleManager = serviceProvider.GetRequiredService<RoleManager<Role>>(); // Use your custom Role class
+                var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+
+                // Check if roles exist, and create them if not
+                if (!await roleManager.RoleExistsAsync("Admin"))
+                {
+                    await roleManager.CreateAsync(new Role { Name = "Admin" }); // Use your custom Role class
+                }
+
+                var user = await userManager.FindByEmailAsync("admin@example.com");
+                await userManager.AddToRoleAsync(user, "Admin");
+            }
+
             return services;
         }
+
     }
 }
