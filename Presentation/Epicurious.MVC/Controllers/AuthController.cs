@@ -26,11 +26,9 @@ namespace Epicurious.MVC.Controllers
         public AuthController(
             UserManager<User> userManager,
             IToastNotification toastNotification,
-
             SignInManager<User> signInManager
             //IResend resend,
             //IWebHostEnvironment environment
-
             )
         {
             _userManager = userManager;
@@ -38,7 +36,6 @@ namespace Epicurious.MVC.Controllers
             _signInManager = signInManager;
             //_resend = resend;
             //_environment = environment;
-
         }
 
         [HttpGet]
@@ -224,7 +221,6 @@ namespace Epicurious.MVC.Controllers
         }
 
         [HttpGet]
-
         public async Task<IActionResult> SignOutAsync()
         {
             await _signInManager.SignOutAsync();
@@ -232,6 +228,11 @@ namespace Epicurious.MVC.Controllers
             _toastNotification.AddSuccessToastMessage("Successfully signed out!");
 
             return RedirectToAction("Login", controllerName: "Auth");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

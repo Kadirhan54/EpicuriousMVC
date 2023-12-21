@@ -42,9 +42,12 @@ app.MapControllerRoute(
 //    //defaults: new { controller = "Recipe", action = "UpdateRecipe" }
 //);
 
-app.MapControllerRoute(
-    name: "auth",
-    pattern: "{controller=Auth}/{action=Recipes}/{id?}");
+//app.MapControllerRoute(
+//    name: "auth",
+//    pattern: "{controller=Auth}/{action=Recipes}/{id?}");
 
+//app.MapControllerRoute(
+//    name: "admin",
+//    pattern: "{controller=Admin}/{action=ReviewRecipe}/{id?}");
 
 app.Run();

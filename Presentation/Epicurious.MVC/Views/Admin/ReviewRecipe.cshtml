@@ -1,0 +1,47 @@
+﻿@model Epicurious.Domain.Entities.Recipe
+
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/css/image.css" />
+}
+
+<h1>Recipe Page</h1>
+
+<!-- Display recipe details -->
+
+<h2>@Model.Title</h2>
+<h2>@Model.Id</h2>
+
+<div>
+    <img width="250px" src="@Model.ImageUrl" alt="Description of the image">
+</div>
+
+
+
+@if (Model.IsApproved == null)
+{
+    <h3>Approve state : Waiting for review </h3>
+    <form method="post" action="@Url.Action("ApproveRecipe", "Admin", new { id = @Model.Id })">
+        <button type="submit">Approve Recipe</button>
+    </form>
+
+    <form method="post" action="@Url.Action("UnapproveRecipe", "Admin", new { id = @Model.Id })">
+        <button type="submit">Unapprove Recipe</button>
+    </form>
+}
+else if (Model.IsApproved == false)
+{
+    <h3>Approve state : Unapproved</h3>
+    <form method="post" action="@Url.Action("ApproveRecipe", "Admin", new { id = @Model.Id })">
+        <button type="submit">Approve Recipe</button>
+    </form>
+}
+else
+{
+    <h3>Approve state : Approved</h3>
+    <form method="post" action="@Url.Action("UnapproveRecipe", "Admin", new { id = @Model.Id })">
+        <button type="submit">Unapprove Recipe</button>
+    </form>
+}
+
+
+

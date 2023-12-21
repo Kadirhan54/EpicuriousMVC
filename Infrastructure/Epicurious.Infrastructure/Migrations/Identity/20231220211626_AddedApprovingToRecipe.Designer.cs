@@ -3,6 +3,7 @@ using System;
 using Epicurious.Infrastructure.Contexts.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Epicurious.Infrastructure.Migrations.Identity
 {
     [DbContext(typeof(EpicuriousIdentityContext))]
-    partial class EpicuriousIdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20231220211626_AddedApprovingToRecipe")]
+    partial class AddedApprovingToRecipe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

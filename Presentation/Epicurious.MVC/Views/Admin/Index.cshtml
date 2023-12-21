@@ -1,8 +1,59 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Epicurious.Domain.Entities
+@model IEnumerable<Recipe>
 @{
+    ViewData["Title"] = "Recipes";
 }
 
+@section Styles {
+    <link rel="stylesheet" type="text/css" href="~/css/image.css" />
+}
 
-<h1>ADMIN PAGE</h1>
+<div class="container mt-3">
+    <h2>Review Recipes for Approving</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Ingredients</th>
+                <th>Description</th>
+                <th>Created By</th>
+                <th>Created On</th>
+                <th>Image</th>
+                <th>State</th>
+                <th width="20px">Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var recipe in Model.OrderBy(r => r.Title))
+            {
+                <tr>
+                    <td>@recipe.Title</td>
+                    <td>@recipe.Ingredients</td>
+                    <td>@recipe.Description</td>
+                    <td>@recipe.User.UserName</td>
+                    <td>@recipe.CreatedOn</td>
+                    <td>
+                        <div class="custom-image recipe">
+                            <img src="@recipe.ImageUrl" alt="Description of the image">
+                        </div>
+                    </td>
+
+                    @if (@recipe.IsApproved == null)
+                    {
+                        <td>Waiting for review </td>
+                    }
+                    else if (@recipe.IsApproved == false)
+                    {
+                        <td>Unapproved</td>
+                    }
+                    else
+                    {
+                        <td>Approved</td>
+                    }
+
+                    <td><a href="/admin/ReviewRecipe/@recipe.Id" class="btn btn-primary">Review</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -16,7 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
-    <Folder Include="Views\Auth\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.8.1" />
