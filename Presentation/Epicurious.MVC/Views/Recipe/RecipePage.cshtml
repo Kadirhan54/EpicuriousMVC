@@ -18,6 +18,8 @@
 <!-- Add other recipe details as needed -->
 @if (Model.Likes.Any())
 {
+    <h5>Star Count: @Model.Likes.Count</h5>
+
     <p>Starred by:</p>
     <ul>
         @foreach (var star in Model.Likes)

@@ -1,0 +1,55 @@
+﻿@model Epicurious.Domain.Identity.User
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyazR3eT0p4CggcmJPQlDdd1uP6I9YBbn"
+          crossorigin="anonymous">
+    <title>User Profile</title>
+</head>
+
+<body>
+
+    <!-- Profile Section -->
+    <section class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <!-- User Image -->
+                <img src="https://via.placeholder.com/150" alt="User Image" class="img-fluid rounded-circle">
+            </div>
+            <div class="col-md-8">
+                <!-- User Details -->
+                <h2 class="mb-4">User Profile</h2>
+                <dl class="row">
+
+                    <dt class="col-sm-3">First Name:</dt>
+                    <dd class="col-sm-9">@Model.FirstName</dd>
+
+                    <dt class="col-sm-3">Last Name:</dt>
+                    <dd class="col-sm-9">@Model.SurName</dd>
+
+                    <dt class="col-sm-3">Birth Date:</dt>
+                    <dd class="col-sm-9">@Model.BirthDate?.ToString("MMMM dd, yyyy")</dd>
+
+                    <dt class="col-sm-3">Gender:</dt>
+                    <dd class="col-sm-9">@Model.Gender</dd>
+
+                    <!-- Add more details as needed -->
+
+                    <dt class="col-sm-3">Created On:</dt>
+                    <dd class="col-sm-9">@Model.CreatedOn.ToString("MMMM dd, yyyy")</dd>
+
+                    <dt class="col-sm-3">Last Modified On:</dt>
+                    <dd class="col-sm-9">@Model.LastModifiedOn?.ToString("MMMM dd, yyyy")</dd>
+
+                </dl>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
