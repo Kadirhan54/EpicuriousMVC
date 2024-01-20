@@ -1,6 +1,7 @@
 ﻿using Epicurious.Application.Dtos.Recipe;
 using Epicurious.Domain.Entities;
 using Epicurious.Domain.Identity;
+using Epicurious.MVC.Services;
 using Epicurious.MVC.Validators;
 using Epicurious.MVC.ViewModels;
 using Epicurious.Persistence.UnitofWork;
@@ -23,8 +24,9 @@ namespace Epicurious.MVC.Controllers
         private readonly IMemoryCache _memoryCache;
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         private const string CacheKey = "RecipeKey";
+        private readonly RequestCountService _requestCountService;
 
-        public RecipeController(UnitOfWork unitOfWork, IToastNotification toastNotification, UserManager<User> userManager, IMemoryCache memoryCache)
+        public RecipeController(UnitOfWork unitOfWork, IToastNotification toastNotification, UserManager<User> userManager, IMemoryCache memoryCache,RequestCountService requestCountService)
         {
             _unitOfWork = unitOfWork;
             _toastNotification = toastNotification;
@@ -35,10 +37,12 @@ namespace Epicurious.MVC.Controllers
                 AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(30),
                 Priority = CacheItemPriority.High,
             };
+            _requestCountService = requestCountService;
         }
 
         public async Task<IActionResult> IndexAsync(CancellationToken cancellationToken)
         {
+            _requestCountService.Count += 1;
 
             if (_memoryCache.TryGetValue(CacheKey, out var recipes)) { return View(recipes); }
 
@@ -53,6 +57,8 @@ namespace Epicurious.MVC.Controllers
         [HttpGet]
         public IActionResult RecipePage(Guid id)
         {
+            _requestCountService.Count += 1;
+
             var recipe = _unitOfWork.RecipeRepository.GetById(id,x=>x.Likes,x=>x.Comments,x=>x.User);
 
             if (recipe == null)
@@ -66,6 +72,8 @@ namespace Epicurious.MVC.Controllers
         [HttpGet]
         public IActionResult AddRecipe()
         {
+            _requestCountService.Count += 1;
+
             var addRecipeViewModel = new RecipeViewModel();
             return View(addRecipeViewModel);
         }
@@ -74,6 +82,8 @@ namespace Epicurious.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRecipeAsync(AddRecipeDto addRecipeDto)
         {
+            _requestCountService.Count += 1;
+
             if (!ModelState.IsValid)
             {
                 var validator = new AddRecipeDtoValidator();
@@ -120,6 +130,8 @@ namespace Epicurious.MVC.Controllers
         [HttpGet]
         public IActionResult UpdateRecipe(Guid id)
         {
+            _requestCountService.Count += 1;
+
             var recipe = _unitOfWork.RecipeRepository.GetById(id);
 
             if (recipe == null)
@@ -141,6 +153,8 @@ namespace Epicurious.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateRecipeAsync(Guid id,UpdateRecipeDto updateRecipeDto)
         {
+            _requestCountService.Count += 1;
+
             if (ModelState.IsValid)
             {
                 var existingRecipe = _unitOfWork.RecipeRepository.GetById(id);
@@ -167,6 +181,8 @@ namespace Epicurious.MVC.Controllers
         [HttpGet]
         public IActionResult DeleteRecipe(Guid id)
         {
+            _requestCountService.Count += 1;
+
             var recipe = _unitOfWork.RecipeRepository.GetById(id);
 
             if (recipe == null)
@@ -180,6 +196,8 @@ namespace Epicurious.MVC.Controllers
         [HttpPost]
         public IActionResult ConfirmDeleteRecipe(Guid id)
         {
+            _requestCountService.Count += 1;
+
             var recipe = _unitOfWork.RecipeRepository.GetById(id);
 
             if (recipe == null)

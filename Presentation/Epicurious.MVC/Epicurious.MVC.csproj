@@ -15,9 +15,6 @@
     <None Remove="Views\Recipes\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.8.1" />
     <PackageReference Include="NToastNotify" Version="8.0.0" />
     <PackageReference Include="Resend" Version="0.0.5" />

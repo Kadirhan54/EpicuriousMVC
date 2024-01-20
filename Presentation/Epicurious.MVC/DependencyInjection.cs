@@ -1,5 +1,6 @@
 ﻿using Epicurious.Domain.Identity;
 using Epicurious.Infrastructure.Contexts.Identity;
+using Epicurious.MVC.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace Epicurious.MVC
@@ -17,6 +18,8 @@ namespace Epicurious.MVC
 
             // Add services for SignInManager
             services.AddScoped<SignInManager<User>>();
+
+            services.AddSingleton(new RequestCountService());
 
             services.AddIdentity<User, Role>(options =>
             {
