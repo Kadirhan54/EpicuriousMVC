@@ -5,24 +5,25 @@
 namespace Epicurious.Infrastructure.Migrations.Identity
 {
     /// <inheritdoc />
-    public partial class AddedApprovingToRecipe : Migration
+    public partial class AddedCategoryName : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsApproved",
-                table: "Recipes",
-                type: "boolean",
-                nullable: true);
+            migrationBuilder.AddColumn<string>(
+                name: "Name",
+                table: "Categories",
+                type: "text",
+                nullable: false,
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsApproved",
-                table: "Recipes");
+                name: "Name",
+                table: "Categories");
         }
     }
 }

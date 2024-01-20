@@ -22,4 +22,8 @@
     <ProjectReference Include="..\..\Core\Epicurious.Domain\Epicurious.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\Identity\" />
+  </ItemGroup>
+
 </Project>

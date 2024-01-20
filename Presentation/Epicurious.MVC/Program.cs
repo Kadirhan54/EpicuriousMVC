@@ -50,4 +50,10 @@ app.MapControllerRoute(
 //    name: "admin",
 //    pattern: "{controller=Admin}/{action=ReviewRecipe}/{id?}");
 
+app.MapControllerRoute(
+    name: "AddCommentRoute",
+    pattern: "comment/AddComment/{id}",
+    defaults: new { controller = "Comment", action = "AddComment" }
+);
+
 app.Run();

@@ -17,6 +17,7 @@ namespace Epicurious.Domain.Identity
 
         public ICollection<Recipe> Recipes {  get; set; }
         public ICollection<LikedRecipe> LikedRecipes { get; set; }
+        public ICollection<Comment> Comments { get; set; }
 
         public Guid CreatedByUserId { get; set; }
         public DateTimeOffset CreatedOn { get; set; }

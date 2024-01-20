@@ -8,6 +8,7 @@ namespace Epicurious.Domain.Entities
 {
     public class Category : EntityBase<Guid>
     {
-        public Recipe recipe {  get; set; }
+        public string Name { get; set; }
+        public ICollection<Recipe> Recipes { get; set; }
     }
 }

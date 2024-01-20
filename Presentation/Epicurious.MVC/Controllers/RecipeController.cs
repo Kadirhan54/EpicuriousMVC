@@ -35,7 +35,7 @@ namespace Epicurious.MVC.Controllers
         [HttpGet]
         public IActionResult RecipePage(Guid id)
         {
-            var recipe = _unitOfWork.RecipeRepository.GetById(id,x=>x.Likes);
+            var recipe = _unitOfWork.RecipeRepository.GetById(id,x=>x.Likes,x=>x.Comments,x=>x.User);
 
             if (recipe == null)
             {
@@ -55,7 +55,6 @@ namespace Epicurious.MVC.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddRecipeAsync(AddRecipeDto addRecipeDto)
-
         {
             if (!ModelState.IsValid)
             {
@@ -70,7 +69,6 @@ namespace Epicurious.MVC.Controllers
 
                 return View(addRecipeDto);
             }
-
             // Accessing the user's ID
             //var userId = _userManager.GetUserId(User);
 
@@ -87,6 +85,10 @@ namespace Epicurious.MVC.Controllers
                 ImageUrl = addRecipeDto.ImageUrl,
                 User = user,
                 UserId = user.Id,
+                Category = new Category()
+                {
+                    Name="Deneme Category"
+                }
             };
 
             _unitOfWork.RecipeRepository.Add(recipe);

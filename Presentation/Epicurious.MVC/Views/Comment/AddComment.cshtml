@@ -1,0 +1,21 @@
+﻿@model Epicurious.MVC.ViewModels.AddCommentModel
+
+<h2>Add a New Comment</h2>
+
+<form action="@Url.Action("AddComment", "Comment")" method="post">
+
+    <!-- Hidden field for the GUID -->
+    <input asp-for="RecipeId" type="hidden" name="id">
+
+    <div class="form-group">
+        <label asp-for="Title">Title</label>
+        <input asp-for="Title" class="form-control" required>    
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description">Description</label>
+        <textarea asp-for="Description" class="form-control" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Comment</button>
+</form>

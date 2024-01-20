@@ -10,6 +10,8 @@ namespace Epicurious.Infrastructure.Contexts.Identity
     {
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<LikedRecipe> LikedRecipes { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         public EpicuriousIdentityContext(DbContextOptions<EpicuriousIdentityContext> dbContextOptions) : base(dbContextOptions)
         {

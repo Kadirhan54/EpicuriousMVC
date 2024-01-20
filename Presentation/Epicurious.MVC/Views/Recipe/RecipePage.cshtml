@@ -33,6 +33,32 @@ else
     <p>No stars yet.</p>
 }
 
+<a href="/comment/AddComment/@Model.Id" class="btn btn-success">Add Comment</a>
+
+<!-- Add other recipe details as needed -->
+@if (Model.Comments.Any())
+{
+    <h5>Comment Count: @Model.Comments.Count</h5>
+
+    <p>Comments :</p>
+    <ul>
+        @foreach (var comment in Model.Comments)
+        {
+            <ul>
+                <li>Title: @comment.Title</li>
+                <li>Description: @comment.Description</li>
+                <li>User: @comment.User.UserName</li>
+
+                <br/>
+            </ul>
+        }
+    </ul>
+}
+else
+{
+    <p>No comments yet.</p>
+}
+
 <!-- Add a button or link to star/unstar the recipe -->
 <form method="post" action="@Url.Action("StarRecipe", "Like")">
     <input type="hidden" name="recipeId" value="@Model.Id" />
@@ -42,4 +68,9 @@ else
 <form method="post" action="@Url.Action("UnstarRecipe", "Like")">
     <input type="hidden" name="recipeId" value="@Model.Id" />
     <button type="submit">Unstar Recipe</button>
+</form>
+
+<form method="post" action="@Url.Action("AddComment", "Comment")">
+    <input type="hidden" name="recipeId" value="@Model.Id" />
+    <button type="submit">Add Comment</button>
 </form>
