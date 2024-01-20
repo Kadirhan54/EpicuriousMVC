@@ -8,6 +8,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using NToastNotify;
 
 namespace Epicurious.MVC.Controllers
@@ -18,17 +20,33 @@ namespace Epicurious.MVC.Controllers
         private readonly UnitOfWork _unitOfWork;
         private readonly IToastNotification _toastNotification;
         private readonly UserManager<User> _userManager;
+        private readonly IMemoryCache _memoryCache;
+        private readonly MemoryCacheEntryOptions _cacheEntryOptions;
+        private const string CacheKey = "RecipeKey";
 
-        public RecipeController(UnitOfWork unitOfWork, IToastNotification toastNotification, UserManager<User> userManager)
+        public RecipeController(UnitOfWork unitOfWork, IToastNotification toastNotification, UserManager<User> userManager, IMemoryCache memoryCache)
         {
             _unitOfWork = unitOfWork;
             _toastNotification = toastNotification;
             _userManager = userManager;
+            _memoryCache = memoryCache;
+            _cacheEntryOptions = new MemoryCacheEntryOptions()
+            {
+                AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(30),
+                Priority = CacheItemPriority.High,
+            };
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync(CancellationToken cancellationToken)
         {
-            return View(_unitOfWork.RecipeRepository.Include(x=>x.Likes,x=>x.User));
+
+            if (_memoryCache.TryGetValue(CacheKey, out var recipes)) { return View(recipes); }
+
+            recipes = await _unitOfWork.RecipeRepository.Include(x => x.Likes, x => x.User).AsNoTracking().ToListAsync(cancellationToken);
+
+            _memoryCache.Set(CacheKey, recipes, _cacheEntryOptions);
+
+            return View(recipes);
         }
 
         // Recipe  görüntüleme
@@ -95,7 +113,7 @@ namespace Epicurious.MVC.Controllers
 
             _toastNotification.AddSuccessToastMessage("Successfully created Recipe!");
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(IndexAsync));
 
         }
 
@@ -140,7 +158,7 @@ namespace Epicurious.MVC.Controllers
                 _unitOfWork.RecipeRepository.Update(existingRecipe);
                 _toastNotification.AddSuccessToastMessage("Recipe updated succeed!");
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(IndexAsync));
             }
 
             return View(updateRecipeDto);
@@ -172,7 +190,7 @@ namespace Epicurious.MVC.Controllers
             _unitOfWork.RecipeRepository.Delete(recipe);
             _toastNotification.AddSuccessToastMessage("Recipe deleted succeed!");
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(IndexAsync));
         }
 
     }

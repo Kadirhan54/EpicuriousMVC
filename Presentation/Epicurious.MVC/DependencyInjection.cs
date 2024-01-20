@@ -1,8 +1,6 @@
 ﻿using Epicurious.Domain.Identity;
 using Epicurious.Infrastructure.Contexts.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Epicurious.MVC
 {
@@ -12,13 +10,13 @@ namespace Epicurious.MVC
         {
             services.AddSession();
 
-            //services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
-            //{
-            //    ProgressBar = false,
-            //    PositionClass = ToastPositions.BottomCenter
-            //});
-            //Or simply go 
             services.AddMvc().AddNToastNotifyToastr();
+
+            // Caching
+            services.AddMemoryCache();
+
+            // Add services for SignInManager
+            services.AddScoped<SignInManager<User>>();
 
             services.AddIdentity<User, Role>(options =>
             {
@@ -33,9 +31,6 @@ namespace Epicurious.MVC
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@$";
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<EpicuriousIdentityContext>();
-
-            // Add services for SignInManager
-            services.AddScoped<SignInManager<User>>();
 
             services.Configure<SecurityStampValidatorOptions>(options =>
             {
